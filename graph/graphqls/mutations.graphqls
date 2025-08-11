@@ -1,0 +1,26 @@
+# ----------- Mutations -----------
+
+type Mutation {
+  addEmployee(input: EmployeeInput!): Employee!
+  updateEmployee(id: ID!, input: EmployeeInput!): Employee!
+  deleteEmployee(id: ID!): Boolean!  @auth(role: ADMIN)
+
+  addProject(input: ProjectInput!): Project!
+  updateProject(id: ID!, input: ProjectInput!): Project!
+  deleteProject(id: ID!): Boolean!
+
+  addTeam(input: TeamInput!): Team!
+  updateTeam(id: ID!, input: TeamInput!): Team!
+  deleteTeam(id: ID!): Boolean!
+
+  addTicket(input: TicketInput!): Ticket!
+  updateTicket(id: ID!, input: TicketInput!): Ticket!
+  deleteTicket(id: ID!): Boolean!
+
+  addTask(input: TaskInput!): Task!
+  updateTask(id: ID!, input: TaskInput!): Task!
+  deleteTask(id: ID!): Boolean!
+
+  addNotification(message: String!, employeeID: ID!): Notification!
+  markNotificationRead(id: ID!): Boolean!
+}

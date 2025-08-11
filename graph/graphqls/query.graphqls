@@ -1,0 +1,21 @@
+# ----------- Queries -----------
+
+type Query {
+  employees: [Employee!]!
+  employee(id: ID!): Employee
+  signIn(email:String!,password:String!):Boolean!
+
+  projects: [Project!]!
+  project(id: ID!): Project
+
+  tasks: [Task!]!
+  task(id: ID!): Task
+
+  tickets: [Ticket!]!
+  ticket(id: ID!): Ticket
+
+  teams: [Team!]!
+  team(id: ID!): Team
+
+  notifications(employeeID: ID!): [Notification!]!
+}

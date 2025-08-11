@@ -1,0 +1,45 @@
+# Where are all the schema files located? Globs are supported
+schema:
+  - graph/graphqls/*.graphqls
+
+# Where should the generated server code go?
+exec:
+  package: generated
+  layout: follow-schema
+  dir: graph/generated
+  filename_template: "{name}.generated.go"
+
+# Where should any generated models go?
+model:
+  filename: graph/model/models_gen.go
+  package: model
+
+# Where should the resolver implementations go?
+resolver:
+  package: resolvers
+  layout: follow-schema
+  dir: graph/resolvers
+  filename_template: "{name}.resolvers.go"
+
+# Uncomment if using your own models
+# autobind:
+#   - "your_module_path/graph/model"
+
+models:
+  ID:
+    model:
+      - github.com/99designs/gqlgen/graphql.ID
+  Int:
+    model:
+      - github.com/99designs/gqlgen/graphql.Int32
+  Int64:
+    model:
+      - github.com/99designs/gqlgen/graphql.Int64
+  UUID:
+    model:
+      - github.com/99designs/gqlgen/graphql.UUID
+  DateTime:
+    model: github.com/99designs/gqlgen/graphql.Time
+
+# Optional settings
+call_argument_directives_with_null: true
