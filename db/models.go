@@ -29,12 +29,24 @@ type Employee struct {
 	Role              RoleDB         `gorm:"type:varchar(20);not null" json:"role"`
 	Active            bool           `gorm:"not null;default:true" json:"active"`
 	ProjectAssignedID *string        `gorm:"type:uuid;index" json:"project_assigned_id,omitempty"`
-	ProjectAssigned   *Project       `gorm:"foreignKey:ProjectAssignedID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"project_assigned,omitempty"`
-	Teams             []*Team        `gorm:"many2many:team_engineers;" json:"teams,omitempty"`
+	// ProjectAssigned   *Project       `gorm:"foreignKey:ProjectAssignedID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"project_assigned,omitempty"`
+	// Teams             []*Team        `gorm:"many2many:team_engineers;" json:"teams,omitempty"`
 	CreatedAt         time.Time      `gorm:"autoCreateTime" json:"createdAt"`
 	UpdatedAt         time.Time      `gorm:"autoUpdateTime" json:"updatedAt"`
 	DeletedAt         gorm.DeletedAt `gorm:"index" json:"-"`
 }
+
+type Team struct {
+	ID           string         `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
+	TeamLeaderID *string        `gorm:"type:uuid;index" json:"team_leader_id,omitempty"`
+	TeamLeader   *Employee      `gorm:"foreignKey:TeamLeaderID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"team_leader,omitempty"`
+	Engineers    []*Employee    `gorm:"many2many:team_engineers;" json:"engineers,omitempty"`
+	// Projects     []*Project     `gorm:"many2many:project_teams;" json:"projects,omitempty"`
+	CreatedAt    time.Time      `gorm:"autoCreateTime" json:"createdAt"`
+	UpdatedAt    time.Time      `gorm:"autoUpdateTime" json:"updatedAt"`
+	DeletedAt    gorm.DeletedAt `gorm:"index" json:"-"`
+}
+
 
 type Project struct {
 	ID          string         `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
@@ -51,16 +63,6 @@ type Project struct {
 	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
-type Team struct {
-	ID           string         `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
-	TeamLeaderID *string        `gorm:"type:uuid;index" json:"team_leader_id,omitempty"`
-	TeamLeader   *Employee      `gorm:"foreignKey:TeamLeaderID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"team_leader,omitempty"`
-	Engineers    []*Employee    `gorm:"many2many:team_engineers;" json:"engineers,omitempty"`
-	Projects     []*Project     `gorm:"many2many:project_teams;" json:"projects,omitempty"`
-	CreatedAt    time.Time      `gorm:"autoCreateTime" json:"createdAt"`
-	UpdatedAt    time.Time      `gorm:"autoUpdateTime" json:"updatedAt"`
-	DeletedAt    gorm.DeletedAt `gorm:"index" json:"-"`
-}
 
 type Ticket struct {
 	ID          string         `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
@@ -97,16 +99,4 @@ type Notification struct {
 	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
-func Migrate(db *gorm.DB) error {
-	if err := db.Exec(`CREATE EXTENSION IF NOT EXISTS pgcrypto;`).Error; err != nil {
-		return err
-	}
-	return db.AutoMigrate(
-		&Employee{},
-		&Project{},
-		&Team{},
-		&Ticket{},
-		&Task{},
-		&Notification{},
-	)
-}
+
