@@ -25,8 +25,8 @@ func TestAuthDirective(t *testing.T) {
 		query   string
 		wantErr bool
 	}{
-		{"ADMIN can delete employee", "ADMIN", `mutation { deleteEmployee(id: "1") }`, false},
-		{"USER cannot delete employee", "USER", `mutation { deleteEmployee(id: "1") }`, true},
+		{"ADMIN can delete employee", "ADMIN", `mutation { deleteEmployee(id: 1) }`, false},
+		{"USER cannot delete employee", "USER", `mutation { deleteEmployee(id: 1) }`, true},
 	}
 
 	for _, tt := range tests {

@@ -8,68 +8,399 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/JonJenson-MFIn/project-management-system-api/db"
 	"github.com/JonJenson-MFIn/project-management-system-api/graph/generated"
 	"github.com/JonJenson-MFIn/project-management-system-api/graph/model"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // Employees is the resolver for the employees field.
 func (r *queryResolver) Employees(ctx context.Context) ([]*model.Employee, error) {
-	panic(fmt.Errorf("not implemented: Employees - employees"))
+	var employees []db.Employee
+	if err := db.DB.Find(&employees).Error; err != nil {
+		return nil, fmt.Errorf("failed to fetch employees: %w", err)
+	}
+
+	result := make([]*model.Employee, len(employees))
+	for i, emp := range employees {
+		result[i] = &model.Employee{
+			ID:                emp.ID,
+			Name:              emp.Name,
+			Email:             emp.Email,
+			Role:              db.RoleToModel(emp.Role),
+			Active:            emp.Active,
+			ProjectAssignedID: emp.ProjectAssignedID,
+			CreatedAt:         emp.CreatedAt,
+			UpdatedAt:         emp.UpdatedAt,
+		}
+	}
+	return result, nil
 }
 
 // Employee is the resolver for the employee field.
-func (r *queryResolver) Employee(ctx context.Context, id string) (*model.Employee, error) {
-	panic(fmt.Errorf("not implemented: Employee - employee"))
+func (r *queryResolver) Employee(ctx context.Context, id int) (*model.Employee, error) {
+	var employee db.Employee
+	if err := db.DB.First(&employee, id).Error; err != nil {
+		return nil, fmt.Errorf("employee not found: %w", err)
+	}
+
+	return &model.Employee{
+		ID:                employee.ID,
+		Name:              employee.Name,
+		Email:             employee.Email,
+		Role:              db.RoleToModel(employee.Role),
+		Active:            employee.Active,
+		ProjectAssignedID: employee.ProjectAssignedID,
+		CreatedAt:         employee.CreatedAt,
+		UpdatedAt:         employee.UpdatedAt,
+	}, nil
 }
 
 // SignIn is the resolver for the signIn field.
 func (r *queryResolver) SignIn(ctx context.Context, email string, password string) (bool, error) {
-	panic(fmt.Errorf("not implemented: SignIn - signIn"))
+	var employee db.Employee
+	if err := db.DB.Where("email = ?", email).First(&employee).Error; err != nil {
+		return false, fmt.Errorf("invalid credentials")
+	}
+
+	if !employee.Active {
+		return false, fmt.Errorf("account is deactivated")
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(employee.Password), []byte(password)); err != nil {
+		return false, fmt.Errorf("invalid credentials")
+	}
+
+	return true, nil
 }
 
 // Projects is the resolver for the projects field.
 func (r *queryResolver) Projects(ctx context.Context) ([]*model.Project, error) {
-	panic(fmt.Errorf("not implemented: Projects - projects"))
+	var projects []db.Project
+	if err := db.DB.Find(&projects).Error; err != nil {
+		return nil, fmt.Errorf("failed to fetch projects: %w", err)
+	}
+
+	result := make([]*model.Project, len(projects))
+	for i, proj := range projects {
+		result[i] = &model.Project{
+			ID:          proj.ID,
+			ManagerID:   proj.ManagerID,
+			Name:        proj.Name,
+			Status:      db.StatusToModel(proj.Status),
+			Description: proj.Description,
+			StartDate:   proj.StartDate,
+			CreatedAt:   proj.CreatedAt,
+			UpdatedAt:   proj.UpdatedAt,
+		}
+	}
+	return result, nil
 }
 
 // Project is the resolver for the project field.
-func (r *queryResolver) Project(ctx context.Context, id string) (*model.Project, error) {
-	panic(fmt.Errorf("not implemented: Project - project"))
+func (r *queryResolver) Project(ctx context.Context, id int) (*model.Project, error) {
+	var project db.Project
+	if err := db.DB.First(&project, id).Error; err != nil {
+		return nil, fmt.Errorf("project not found: %w", err)
+	}
+
+	return &model.Project{
+		ID:          project.ID,
+		ManagerID:   project.ManagerID,
+		Name:        project.Name,
+		Status:      db.StatusToModel(project.Status),
+		Description: project.Description,
+		StartDate:   project.StartDate,
+		CreatedAt:   project.CreatedAt,
+		UpdatedAt:   project.UpdatedAt,
+	}, nil
 }
 
 // Tasks is the resolver for the tasks field.
 func (r *queryResolver) Tasks(ctx context.Context) ([]*model.Task, error) {
-	panic(fmt.Errorf("not implemented: Tasks - tasks"))
+	var tasks []db.Task
+	if err := db.DB.Find(&tasks).Error; err != nil {
+		return nil, fmt.Errorf("failed to fetch tasks: %w", err)
+	}
+
+	result := make([]*model.Task, len(tasks))
+	for i, task := range tasks {
+		var dueDate *string
+		if task.DueDate != nil {
+			formatted := task.DueDate.Format("2006-01-02T15:04:05Z07:00")
+			dueDate = &formatted
+		}
+
+		result[i] = &model.Task{
+			ID:           task.ID,
+			Title:        task.Title,
+			Description:  task.Description,
+			AssignedToID: task.AssignedToID,
+			ProjectID:    task.ProjectID,
+			DueDate:      dueDate,
+			Status:       db.StatusToModel(task.Status),
+			Priority:     model.Priority(task.Priority),
+			CreatedAt:    task.CreatedAt,
+			CompletedAt:  task.CompletedAt,
+		}
+	}
+	return result, nil
 }
 
 // Task is the resolver for the task field.
-func (r *queryResolver) Task(ctx context.Context, id string) (*model.Task, error) {
-	panic(fmt.Errorf("not implemented: Task - task"))
+func (r *queryResolver) Task(ctx context.Context, id int) (*model.Task, error) {
+	var task db.Task
+	if err := db.DB.First(&task, id).Error; err != nil {
+		return nil, fmt.Errorf("task not found: %w", err)
+	}
+
+	var dueDate *string
+	if task.DueDate != nil {
+		formatted := task.DueDate.Format("2006-01-02T15:04:05Z07:00")
+		dueDate = &formatted
+	}
+
+	return &model.Task{
+		ID:           task.ID,
+		Title:        task.Title,
+		Description:  task.Description,
+		AssignedToID: task.AssignedToID,
+		ProjectID:    task.ProjectID,
+		DueDate:      dueDate,
+		Status:       db.StatusToModel(task.Status),
+		Priority:     model.Priority(task.Priority),
+		CreatedAt:    task.CreatedAt,
+		CompletedAt:  task.CompletedAt,
+	}, nil
 }
 
 // Tickets is the resolver for the tickets field.
 func (r *queryResolver) Tickets(ctx context.Context) ([]*model.Ticket, error) {
-	panic(fmt.Errorf("not implemented: Tickets - tickets"))
+	var tickets []db.Ticket
+	if err := db.DB.Find(&tickets).Error; err != nil {
+		return nil, fmt.Errorf("failed to fetch tickets: %w", err)
+	}
+
+	result := make([]*model.Ticket, len(tickets))
+	for i, ticket := range tickets {
+		result[i] = &model.Ticket{
+			ID:           ticket.ID,
+			ProjectID:    ticket.ProjectID,
+			AssignedToID: ticket.AssignedToID,
+			Status:       db.StatusToModel(ticket.Status),
+			Title:        ticket.Title,
+			Description:  ticket.Description,
+			Priority:     model.Priority(ticket.Priority),
+			CreatedAt:    ticket.CreatedAt,
+			CompletedAt:  ticket.CompletedAt,
+		}
+	}
+	return result, nil
 }
 
 // Ticket is the resolver for the ticket field.
-func (r *queryResolver) Ticket(ctx context.Context, id string) (*model.Ticket, error) {
-	panic(fmt.Errorf("not implemented: Ticket - ticket"))
+func (r *queryResolver) Ticket(ctx context.Context, id int) (*model.Ticket, error) {
+	var ticket db.Ticket
+	if err := db.DB.First(&ticket, id).Error; err != nil {
+		return nil, fmt.Errorf("ticket not found: %w", err)
+	}
+
+	return &model.Ticket{
+		ID:           ticket.ID,
+		ProjectID:    ticket.ProjectID,
+		AssignedToID: ticket.AssignedToID,
+		Status:       db.StatusToModel(ticket.Status),
+		Title:        ticket.Title,
+		Description:  ticket.Description,
+		Priority:     model.Priority(ticket.Priority),
+		CreatedAt:    ticket.CreatedAt,
+		CompletedAt:  ticket.CompletedAt,
+	}, nil
 }
 
 // Teams is the resolver for the teams field.
 func (r *queryResolver) Teams(ctx context.Context) ([]*model.Team, error) {
-	panic(fmt.Errorf("not implemented: Teams - teams"))
+	var teams []db.Team
+	if err := db.DB.Find(&teams).Error; err != nil {
+		return nil, fmt.Errorf("failed to fetch teams: %w", err)
+	}
+
+	result := make([]*model.Team, len(teams))
+	for i, team := range teams {
+		result[i] = &model.Team{
+			ID:           team.ID,
+			TeamLeaderID: team.TeamLeaderID,
+			Name:         team.Name,
+			Description:  team.Description,
+			CreatedAt:    team.CreatedAt,
+			UpdatedAt:    team.UpdatedAt,
+		}
+	}
+	return result, nil
 }
 
 // Team is the resolver for the team field.
-func (r *queryResolver) Team(ctx context.Context, id string) (*model.Team, error) {
-	panic(fmt.Errorf("not implemented: Team - team"))
+func (r *queryResolver) Team(ctx context.Context, id int) (*model.Team, error) {
+	var team db.Team
+	if err := db.DB.First(&team, id).Error; err != nil {
+		return nil, fmt.Errorf("team not found: %w", err)
+	}
+
+	return &model.Team{
+		ID:           team.ID,
+		TeamLeaderID: team.TeamLeaderID,
+		Name:         team.Name,
+		Description:  team.Description,
+		CreatedAt:    team.CreatedAt,
+		UpdatedAt:    team.UpdatedAt,
+	}, nil
 }
 
 // Notifications is the resolver for the notifications field.
-func (r *queryResolver) Notifications(ctx context.Context, employeeID string) ([]*model.Notification, error) {
-	panic(fmt.Errorf("not implemented: Notifications - notifications"))
+func (r *queryResolver) Notifications(ctx context.Context, employeeID int) ([]*model.Notification, error) {
+	var notifications []db.Notification
+	if err := db.DB.Where("employee_id = ?", employeeID).Find(&notifications).Error; err != nil {
+		return nil, fmt.Errorf("failed to fetch notifications: %w", err)
+	}
+
+	result := make([]*model.Notification, len(notifications))
+	for i, notif := range notifications {
+		result[i] = &model.Notification{
+			ID:         notif.ID,
+			Message:    notif.Message,
+			EmployeeID: notif.EmployeeID,
+			Type:       model.NotificationType(notif.Type),
+			CreatedAt:  notif.CreatedAt,
+			Read:       notif.Read,
+		}
+	}
+	return result, nil
+}
+
+// TeamEngineers is the resolver for the teamEngineers field.
+func (r *queryResolver) TeamEngineers(ctx context.Context, teamID int) ([]*model.TeamEngineer, error) {
+	var teamEngineers []db.TeamEngineer
+	if err := db.DB.Where("team_id = ?", teamID).Find(&teamEngineers).Error; err != nil {
+		return nil, fmt.Errorf("failed to fetch team engineers: %w", err)
+	}
+
+	result := make([]*model.TeamEngineer, len(teamEngineers))
+	for i, te := range teamEngineers {
+		result[i] = &model.TeamEngineer{
+			TeamID:     te.TeamID,
+			EngineerID: te.EngineerID,
+			CreatedAt:  te.CreatedAt,
+		}
+	}
+	return result, nil
+}
+
+// ProjectTeams is the resolver for the projectTeams field.
+func (r *queryResolver) ProjectTeams(ctx context.Context, projectID int) ([]*model.ProjectTeam, error) {
+	var projectTeams []db.ProjectTeam
+	if err := db.DB.Where("project_id = ?", projectID).Find(&projectTeams).Error; err != nil {
+		return nil, fmt.Errorf("failed to fetch project teams: %w", err)
+	}
+
+	result := make([]*model.ProjectTeam, len(projectTeams))
+	for i, pt := range projectTeams {
+		result[i] = &model.ProjectTeam{
+			ProjectID: pt.ProjectID,
+			TeamID:    pt.TeamID,
+			CreatedAt: pt.CreatedAt,
+		}
+	}
+	return result, nil
+}
+
+// ProjectEmployees is the resolver for the projectEmployees field.
+func (r *queryResolver) ProjectEmployees(ctx context.Context, projectID int) ([]*model.ProjectEmployee, error) {
+	var projectEmployees []db.ProjectEmployee
+	if err := db.DB.Where("project_id = ?", projectID).Find(&projectEmployees).Error; err != nil {
+		return nil, fmt.Errorf("failed to fetch project employees: %w", err)
+	}
+
+	result := make([]*model.ProjectEmployee, len(projectEmployees))
+	for i, pe := range projectEmployees {
+		result[i] = &model.ProjectEmployee{
+			ProjectID:  pe.ProjectID,
+			EmployeeID: pe.EmployeeID,
+			Role:       pe.Role,
+			CreatedAt:  pe.CreatedAt,
+		}
+	}
+	return result, nil
+}
+
+// EmployeesByProject is the resolver for the employeesByProject field.
+func (r *queryResolver) EmployeesByProject(ctx context.Context, projectID int) ([]*model.Employee, error) {
+	var employees []db.Employee
+	if err := db.DB.Where("project_assigned_id = ?", projectID).Find(&employees).Error; err != nil {
+		return nil, fmt.Errorf("failed to fetch employees by project: %w", err)
+	}
+
+	result := make([]*model.Employee, len(employees))
+	for i, emp := range employees {
+		result[i] = &model.Employee{
+			ID:                emp.ID,
+			Name:              emp.Name,
+			Email:             emp.Email,
+			Role:              db.RoleToModel(emp.Role),
+			Active:            emp.Active,
+			ProjectAssignedID: emp.ProjectAssignedID,
+			CreatedAt:         emp.CreatedAt,
+			UpdatedAt:         emp.UpdatedAt,
+		}
+	}
+	return result, nil
+}
+
+// TeamsByProject is the resolver for the teamsByProject field.
+func (r *queryResolver) TeamsByProject(ctx context.Context, projectID int) ([]*model.Team, error) {
+	var teams []db.Team
+	if err := db.DB.Joins("JOIN project_teams ON teams.id = project_teams.team_id").
+		Where("project_teams.project_id = ?", projectID).
+		Find(&teams).Error; err != nil {
+		return nil, fmt.Errorf("failed to fetch teams by project: %w", err)
+	}
+
+	result := make([]*model.Team, len(teams))
+	for i, team := range teams {
+		result[i] = &model.Team{
+			ID:           team.ID,
+			TeamLeaderID: team.TeamLeaderID,
+			Name:         team.Name,
+			Description:  team.Description,
+			CreatedAt:    team.CreatedAt,
+			UpdatedAt:    team.UpdatedAt,
+		}
+	}
+	return result, nil
+}
+
+// EngineersByTeam is the resolver for the engineersByTeam field.
+func (r *queryResolver) EngineersByTeam(ctx context.Context, teamID int) ([]*model.Employee, error) {
+	var employees []db.Employee
+	if err := db.DB.Joins("JOIN team_engineers ON employees.id = team_engineers.engineer_id").
+		Where("team_engineers.team_id = ?", teamID).
+		Find(&employees).Error; err != nil {
+		return nil, fmt.Errorf("failed to fetch engineers by team: %w", err)
+	}
+
+	result := make([]*model.Employee, len(employees))
+	for i, emp := range employees {
+		result[i] = &model.Employee{
+			ID:                emp.ID,
+			Name:              emp.Name,
+			Email:             emp.Email,
+			Role:              db.RoleToModel(emp.Role),
+			Active:            emp.Active,
+			ProjectAssignedID: emp.ProjectAssignedID,
+			CreatedAt:         emp.CreatedAt,
+			UpdatedAt:         emp.UpdatedAt,
+		}
+	}
+	return result, nil
 }
 
 // Query returns generated.QueryResolver implementation.

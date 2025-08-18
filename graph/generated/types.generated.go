@@ -5,7 +5,6 @@ package generated
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strconv"
 	"sync"
 	"sync/atomic"
@@ -67,9 +66,9 @@ func (ec *executionContext) _Employee_id(ctx context.Context, field graphql.Coll
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNID2string(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Employee_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -79,7 +78,7 @@ func (ec *executionContext) fieldContext_Employee_id(_ context.Context, field gr
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ID does not have child fields")
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
@@ -261,8 +260,8 @@ func (ec *executionContext) fieldContext_Employee_active(_ context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _Employee_project_assigned(ctx context.Context, field graphql.CollectedField, obj *model.Employee) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Employee_project_assigned(ctx, field)
+func (ec *executionContext) _Employee_projectAssignedID(ctx context.Context, field graphql.CollectedField, obj *model.Employee) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Employee_projectAssignedID(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -275,7 +274,7 @@ func (ec *executionContext) _Employee_project_assigned(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ProjectAssigned, nil
+		return obj.ProjectAssignedID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -284,37 +283,107 @@ func (ec *executionContext) _Employee_project_assigned(ctx context.Context, fiel
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.Project)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalOProject2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProject(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Employee_project_assigned(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Employee_projectAssignedID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Employee",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Project_id(ctx, field)
-			case "manager":
-				return ec.fieldContext_Project_manager(ctx, field)
-			case "teams":
-				return ec.fieldContext_Project_teams(ctx, field)
-			case "name":
-				return ec.fieldContext_Project_name(ctx, field)
-			case "status":
-				return ec.fieldContext_Project_status(ctx, field)
-			case "tickets":
-				return ec.fieldContext_Project_tickets(ctx, field)
-			case "description":
-				return ec.fieldContext_Project_description(ctx, field)
-			case "startDate":
-				return ec.fieldContext_Project_startDate(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Project", field.Name)
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Employee_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.Employee) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Employee_createdAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNDateTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Employee_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Employee",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Employee_updatedAt(ctx context.Context, field graphql.CollectedField, obj *model.Employee) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Employee_updatedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNDateTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Employee_updatedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Employee",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
 		},
 	}
 	return fc, nil
@@ -346,9 +415,9 @@ func (ec *executionContext) _Notification_id(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNID2string(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Notification_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -358,7 +427,7 @@ func (ec *executionContext) fieldContext_Notification_id(_ context.Context, fiel
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ID does not have child fields")
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
@@ -408,8 +477,8 @@ func (ec *executionContext) fieldContext_Notification_message(_ context.Context,
 	return fc, nil
 }
 
-func (ec *executionContext) _Notification_employee(ctx context.Context, field graphql.CollectedField, obj *model.Notification) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Notification_employee(ctx, field)
+func (ec *executionContext) _Notification_employeeID(ctx context.Context, field graphql.CollectedField, obj *model.Notification) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Notification_employeeID(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -422,7 +491,7 @@ func (ec *executionContext) _Notification_employee(ctx context.Context, field gr
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Employee, nil
+		return obj.EmployeeID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -434,33 +503,63 @@ func (ec *executionContext) _Notification_employee(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Employee)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNEmployee2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐEmployee(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Notification_employee(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Notification_employeeID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Notification",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Employee_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Employee_name(ctx, field)
-			case "email":
-				return ec.fieldContext_Employee_email(ctx, field)
-			case "role":
-				return ec.fieldContext_Employee_role(ctx, field)
-			case "active":
-				return ec.fieldContext_Employee_active(ctx, field)
-			case "project_assigned":
-				return ec.fieldContext_Employee_project_assigned(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Employee", field.Name)
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Notification_type(ctx context.Context, field graphql.CollectedField, obj *model.Notification) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Notification_type(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Type, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model.NotificationType)
+	fc.Result = res
+	return ec.marshalNNotificationType2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐNotificationType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Notification_type(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Notification",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type NotificationType does not have child fields")
 		},
 	}
 	return fc, nil
@@ -580,9 +679,9 @@ func (ec *executionContext) _Project_id(ctx context.Context, field graphql.Colle
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNID2string(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Project_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -592,14 +691,14 @@ func (ec *executionContext) fieldContext_Project_id(_ context.Context, field gra
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ID does not have child fields")
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Project_manager(ctx context.Context, field graphql.CollectedField, obj *model.Project) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Project_manager(ctx, field)
+func (ec *executionContext) _Project_managerID(ctx context.Context, field graphql.CollectedField, obj *model.Project) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Project_managerID(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -612,7 +711,7 @@ func (ec *executionContext) _Project_manager(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Manager, nil
+		return obj.ManagerID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -621,82 +720,19 @@ func (ec *executionContext) _Project_manager(ctx context.Context, field graphql.
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.Employee)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalOEmployee2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐEmployee(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Project_manager(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Project_managerID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Project",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Employee_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Employee_name(ctx, field)
-			case "email":
-				return ec.fieldContext_Employee_email(ctx, field)
-			case "role":
-				return ec.fieldContext_Employee_role(ctx, field)
-			case "active":
-				return ec.fieldContext_Employee_active(ctx, field)
-			case "project_assigned":
-				return ec.fieldContext_Employee_project_assigned(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Employee", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Project_teams(ctx context.Context, field graphql.CollectedField, obj *model.Project) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Project_teams(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Teams, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*model.Team)
-	fc.Result = res
-	return ec.marshalOTeam2ᚕᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTeamᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Project_teams(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Project",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Team_id(ctx, field)
-			case "teamLeader":
-				return ec.fieldContext_Team_teamLeader(ctx, field)
-			case "engineers":
-				return ec.fieldContext_Team_engineers(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Team", field.Name)
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
@@ -790,63 +826,6 @@ func (ec *executionContext) fieldContext_Project_status(_ context.Context, field
 	return fc, nil
 }
 
-func (ec *executionContext) _Project_tickets(ctx context.Context, field graphql.CollectedField, obj *model.Project) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Project_tickets(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Tickets, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*model.Ticket)
-	fc.Result = res
-	return ec.marshalOTicket2ᚕᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTicketᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Project_tickets(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Project",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Ticket_id(ctx, field)
-			case "status":
-				return ec.fieldContext_Ticket_status(ctx, field)
-			case "title":
-				return ec.fieldContext_Ticket_title(ctx, field)
-			case "description":
-				return ec.fieldContext_Ticket_description(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_Ticket_createdAt(ctx, field)
-			case "completedAt":
-				return ec.fieldContext_Ticket_completedAt(ctx, field)
-			case "project":
-				return ec.fieldContext_Ticket_project(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Ticket", field.Name)
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Project_description(ctx context.Context, field graphql.CollectedField, obj *model.Project) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Project_description(ctx, field)
 	if err != nil {
@@ -932,6 +911,402 @@ func (ec *executionContext) fieldContext_Project_startDate(_ context.Context, fi
 	return fc, nil
 }
 
+func (ec *executionContext) _Project_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.Project) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Project_createdAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNDateTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Project_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Project",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Project_updatedAt(ctx context.Context, field graphql.CollectedField, obj *model.Project) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Project_updatedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNDateTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Project_updatedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Project",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ProjectEmployee_projectID(ctx context.Context, field graphql.CollectedField, obj *model.ProjectEmployee) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ProjectEmployee_projectID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProjectID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ProjectEmployee_projectID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ProjectEmployee",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ProjectEmployee_employeeID(ctx context.Context, field graphql.CollectedField, obj *model.ProjectEmployee) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ProjectEmployee_employeeID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EmployeeID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ProjectEmployee_employeeID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ProjectEmployee",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ProjectEmployee_role(ctx context.Context, field graphql.CollectedField, obj *model.ProjectEmployee) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ProjectEmployee_role(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Role, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ProjectEmployee_role(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ProjectEmployee",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ProjectEmployee_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.ProjectEmployee) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ProjectEmployee_createdAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNDateTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ProjectEmployee_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ProjectEmployee",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ProjectTeam_projectID(ctx context.Context, field graphql.CollectedField, obj *model.ProjectTeam) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ProjectTeam_projectID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProjectID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ProjectTeam_projectID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ProjectTeam",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ProjectTeam_teamID(ctx context.Context, field graphql.CollectedField, obj *model.ProjectTeam) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ProjectTeam_teamID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TeamID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ProjectTeam_teamID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ProjectTeam",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ProjectTeam_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.ProjectTeam) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ProjectTeam_createdAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNDateTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ProjectTeam_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ProjectTeam",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Task_id(ctx context.Context, field graphql.CollectedField, obj *model.Task) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Task_id(ctx, field)
 	if err != nil {
@@ -958,9 +1333,9 @@ func (ec *executionContext) _Task_id(ctx context.Context, field graphql.Collecte
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNID2string(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Task_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -970,7 +1345,7 @@ func (ec *executionContext) fieldContext_Task_id(_ context.Context, field graphq
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ID does not have child fields")
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1061,8 +1436,8 @@ func (ec *executionContext) fieldContext_Task_description(_ context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _Task_assignedTo(ctx context.Context, field graphql.CollectedField, obj *model.Task) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Task_assignedTo(ctx, field)
+func (ec *executionContext) _Task_assignedToID(ctx context.Context, field graphql.CollectedField, obj *model.Task) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Task_assignedToID(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1075,45 +1450,69 @@ func (ec *executionContext) _Task_assignedTo(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.AssignedTo, nil
+		return obj.AssignedToID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Employee)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalNEmployee2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐEmployee(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Task_assignedTo(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Task_assignedToID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Task",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Employee_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Employee_name(ctx, field)
-			case "email":
-				return ec.fieldContext_Employee_email(ctx, field)
-			case "role":
-				return ec.fieldContext_Employee_role(ctx, field)
-			case "active":
-				return ec.fieldContext_Employee_active(ctx, field)
-			case "project_assigned":
-				return ec.fieldContext_Employee_project_assigned(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Employee", field.Name)
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Task_projectID(ctx context.Context, field graphql.CollectedField, obj *model.Task) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Task_projectID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProjectID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Task_projectID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Task",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1199,6 +1598,50 @@ func (ec *executionContext) fieldContext_Task_status(_ context.Context, field gr
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Status does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Task_priority(ctx context.Context, field graphql.CollectedField, obj *model.Task) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Task_priority(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Priority, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model.Priority)
+	fc.Result = res
+	return ec.marshalNPriority2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐPriority(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Task_priority(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Task",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Priority does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1315,9 +1758,9 @@ func (ec *executionContext) _Team_id(ctx context.Context, field graphql.Collecte
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNID2string(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Team_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1327,14 +1770,14 @@ func (ec *executionContext) fieldContext_Team_id(_ context.Context, field graphq
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ID does not have child fields")
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Team_teamLeader(ctx context.Context, field graphql.CollectedField, obj *model.Team) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Team_teamLeader(ctx, field)
+func (ec *executionContext) _Team_teamLeaderID(ctx context.Context, field graphql.CollectedField, obj *model.Team) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Team_teamLeaderID(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1347,7 +1790,7 @@ func (ec *executionContext) _Team_teamLeader(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.TeamLeader, nil
+		return obj.TeamLeaderID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1356,40 +1799,26 @@ func (ec *executionContext) _Team_teamLeader(ctx context.Context, field graphql.
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.Employee)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalOEmployee2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐEmployee(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Team_teamLeader(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Team_teamLeaderID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Team",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Employee_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Employee_name(ctx, field)
-			case "email":
-				return ec.fieldContext_Employee_email(ctx, field)
-			case "role":
-				return ec.fieldContext_Employee_role(ctx, field)
-			case "active":
-				return ec.fieldContext_Employee_active(ctx, field)
-			case "project_assigned":
-				return ec.fieldContext_Employee_project_assigned(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Employee", field.Name)
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Team_engineers(ctx context.Context, field graphql.CollectedField, obj *model.Team) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Team_engineers(ctx, field)
+func (ec *executionContext) _Team_name(ctx context.Context, field graphql.CollectedField, obj *model.Team) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Team_name(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1402,7 +1831,51 @@ func (ec *executionContext) _Team_engineers(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Engineers, nil
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Team_name(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Team",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Team_description(ctx context.Context, field graphql.CollectedField, obj *model.Team) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Team_description(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Description, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1411,33 +1884,239 @@ func (ec *executionContext) _Team_engineers(ctx context.Context, field graphql.C
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Employee)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOEmployee2ᚕᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐEmployeeᚄ(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Team_engineers(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Team_description(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Team",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Employee_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Employee_name(ctx, field)
-			case "email":
-				return ec.fieldContext_Employee_email(ctx, field)
-			case "role":
-				return ec.fieldContext_Employee_role(ctx, field)
-			case "active":
-				return ec.fieldContext_Employee_active(ctx, field)
-			case "project_assigned":
-				return ec.fieldContext_Employee_project_assigned(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Employee", field.Name)
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Team_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.Team) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Team_createdAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNDateTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Team_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Team",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Team_updatedAt(ctx context.Context, field graphql.CollectedField, obj *model.Team) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Team_updatedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNDateTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Team_updatedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Team",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TeamEngineer_teamID(ctx context.Context, field graphql.CollectedField, obj *model.TeamEngineer) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TeamEngineer_teamID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TeamID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TeamEngineer_teamID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TeamEngineer",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TeamEngineer_engineerID(ctx context.Context, field graphql.CollectedField, obj *model.TeamEngineer) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TeamEngineer_engineerID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EngineerID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TeamEngineer_engineerID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TeamEngineer",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TeamEngineer_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.TeamEngineer) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TeamEngineer_createdAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNDateTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TeamEngineer_createdAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TeamEngineer",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1469,9 +2148,9 @@ func (ec *executionContext) _Ticket_id(ctx context.Context, field graphql.Collec
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNID2string(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Ticket_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1481,7 +2160,92 @@ func (ec *executionContext) fieldContext_Ticket_id(_ context.Context, field grap
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ID does not have child fields")
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Ticket_projectID(ctx context.Context, field graphql.CollectedField, obj *model.Ticket) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Ticket_projectID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProjectID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Ticket_projectID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Ticket",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Ticket_assignedToID(ctx context.Context, field graphql.CollectedField, obj *model.Ticket) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Ticket_assignedToID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AssignedToID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Ticket_assignedToID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Ticket",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1616,6 +2380,50 @@ func (ec *executionContext) fieldContext_Ticket_description(_ context.Context, f
 	return fc, nil
 }
 
+func (ec *executionContext) _Ticket_priority(ctx context.Context, field graphql.CollectedField, obj *model.Ticket) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Ticket_priority(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Priority, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model.Priority)
+	fc.Result = res
+	return ec.marshalNPriority2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐPriority(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Ticket_priority(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Ticket",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Priority does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Ticket_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.Ticket) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Ticket_createdAt(ctx, field)
 	if err != nil {
@@ -1701,68 +2509,6 @@ func (ec *executionContext) fieldContext_Ticket_completedAt(_ context.Context, f
 	return fc, nil
 }
 
-func (ec *executionContext) _Ticket_project(ctx context.Context, field graphql.CollectedField, obj *model.Ticket) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Ticket_project(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Project, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.Project)
-	fc.Result = res
-	return ec.marshalNProject2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProject(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Ticket_project(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Ticket",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Project_id(ctx, field)
-			case "manager":
-				return ec.fieldContext_Project_manager(ctx, field)
-			case "teams":
-				return ec.fieldContext_Project_teams(ctx, field)
-			case "name":
-				return ec.fieldContext_Project_name(ctx, field)
-			case "status":
-				return ec.fieldContext_Project_status(ctx, field)
-			case "tickets":
-				return ec.fieldContext_Project_tickets(ctx, field)
-			case "description":
-				return ec.fieldContext_Project_description(ctx, field)
-			case "startDate":
-				return ec.fieldContext_Project_startDate(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Project", field.Name)
-		},
-	}
-	return fc, nil
-}
-
 // endregion **************************** field.gotpl *****************************
 
 // region    **************************** input.gotpl *****************************
@@ -1804,14 +2550,14 @@ func (ec *executionContext) unmarshalInputEmployeeInput(ctx context.Context, obj
 			it.Email = data
 		case "password":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("password"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.Password = data
 		case "projectID":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("projectID"))
-			data, err := ec.unmarshalOID2ᚖstring(ctx, v)
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -1856,6 +2602,47 @@ func (ec *executionContext) unmarshalInputLoginDetailsInput(ctx context.Context,
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputProjectEmployeeInput(ctx context.Context, obj any) (model.ProjectEmployeeInput, error) {
+	var it model.ProjectEmployeeInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"projectID", "employeeID", "role"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "projectID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("projectID"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ProjectID = data
+		case "employeeID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("employeeID"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.EmployeeID = data
+		case "role":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("role"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Role = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputProjectInput(ctx context.Context, obj any) (model.ProjectInput, error) {
 	var it model.ProjectInput
 	asMap := map[string]any{}
@@ -1879,14 +2666,14 @@ func (ec *executionContext) unmarshalInputProjectInput(ctx context.Context, obj 
 			it.Name = data
 		case "managerID":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("managerID"))
-			data, err := ec.unmarshalOID2ᚖstring(ctx, v)
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.ManagerID = data
 		case "teamIDs":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("teamIDs"))
-			data, err := ec.unmarshalOID2ᚕstringᚄ(ctx, v)
+			data, err := ec.unmarshalOInt2ᚕintᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -1911,6 +2698,40 @@ func (ec *executionContext) unmarshalInputProjectInput(ctx context.Context, obj 
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputProjectTeamInput(ctx context.Context, obj any) (model.ProjectTeamInput, error) {
+	var it model.ProjectTeamInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"projectID", "teamID"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "projectID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("projectID"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ProjectID = data
+		case "teamID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("teamID"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.TeamID = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputTaskInput(ctx context.Context, obj any) (model.TaskInput, error) {
 	var it model.TaskInput
 	asMap := map[string]any{}
@@ -1918,7 +2739,7 @@ func (ec *executionContext) unmarshalInputTaskInput(ctx context.Context, obj any
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"title", "description", "assignedToID", "dueDate", "status"}
+	fieldsInOrder := [...]string{"title", "description", "assignedToID", "projectID", "dueDate", "status", "priority"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -1941,11 +2762,18 @@ func (ec *executionContext) unmarshalInputTaskInput(ctx context.Context, obj any
 			it.Description = data
 		case "assignedToID":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("assignedToID"))
-			data, err := ec.unmarshalOID2ᚖstring(ctx, v)
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.AssignedToID = data
+		case "projectID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("projectID"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ProjectID = data
 		case "dueDate":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dueDate"))
 			data, err := ec.unmarshalODate2ᚖstring(ctx, v)
@@ -1960,6 +2788,47 @@ func (ec *executionContext) unmarshalInputTaskInput(ctx context.Context, obj any
 				return it, err
 			}
 			it.Status = data
+		case "priority":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("priority"))
+			data, err := ec.unmarshalOPriority2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐPriority(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Priority = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputTeamEngineerInput(ctx context.Context, obj any) (model.TeamEngineerInput, error) {
+	var it model.TeamEngineerInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"teamID", "engineerID"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "teamID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("teamID"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.TeamID = data
+		case "engineerID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("engineerID"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.EngineerID = data
 		}
 	}
 
@@ -1973,23 +2842,37 @@ func (ec *executionContext) unmarshalInputTeamInput(ctx context.Context, obj any
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"teamLeaderID", "engineerIDs"}
+	fieldsInOrder := [...]string{"name", "teamLeaderID", "description", "engineerIDs"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
+		case "name":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Name = data
 		case "teamLeaderID":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("teamLeaderID"))
-			data, err := ec.unmarshalNID2string(ctx, v)
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.TeamLeaderID = data
+		case "description":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Description = data
 		case "engineerIDs":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("engineerIDs"))
-			data, err := ec.unmarshalNID2ᚕstringᚄ(ctx, v)
+			data, err := ec.unmarshalOInt2ᚕintᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -2007,7 +2890,7 @@ func (ec *executionContext) unmarshalInputTicketInput(ctx context.Context, obj a
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"title", "description", "projectID", "status"}
+	fieldsInOrder := [...]string{"title", "description", "projectID", "assignedToID", "status", "priority"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -2030,11 +2913,18 @@ func (ec *executionContext) unmarshalInputTicketInput(ctx context.Context, obj a
 			it.Description = data
 		case "projectID":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("projectID"))
-			data, err := ec.unmarshalNID2string(ctx, v)
+			data, err := ec.unmarshalNInt2int(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.ProjectID = data
+		case "assignedToID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("assignedToID"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AssignedToID = data
 		case "status":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
 			data, err := ec.unmarshalNStatus2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐStatus(ctx, v)
@@ -2042,6 +2932,13 @@ func (ec *executionContext) unmarshalInputTicketInput(ctx context.Context, obj a
 				return it, err
 			}
 			it.Status = data
+		case "priority":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("priority"))
+			data, err := ec.unmarshalOPriority2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐPriority(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Priority = data
 		}
 	}
 
@@ -2092,8 +2989,18 @@ func (ec *executionContext) _Employee(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "project_assigned":
-			out.Values[i] = ec._Employee_project_assigned(ctx, field, obj)
+		case "projectAssignedID":
+			out.Values[i] = ec._Employee_projectAssignedID(ctx, field, obj)
+		case "createdAt":
+			out.Values[i] = ec._Employee_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updatedAt":
+			out.Values[i] = ec._Employee_updatedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2138,8 +3045,13 @@ func (ec *executionContext) _Notification(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "employee":
-			out.Values[i] = ec._Notification_employee(ctx, field, obj)
+		case "employeeID":
+			out.Values[i] = ec._Notification_employeeID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "type":
+			out.Values[i] = ec._Notification_type(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -2192,10 +3104,8 @@ func (ec *executionContext) _Project(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "manager":
-			out.Values[i] = ec._Project_manager(ctx, field, obj)
-		case "teams":
-			out.Values[i] = ec._Project_teams(ctx, field, obj)
+		case "managerID":
+			out.Values[i] = ec._Project_managerID(ctx, field, obj)
 		case "name":
 			out.Values[i] = ec._Project_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -2206,12 +3116,123 @@ func (ec *executionContext) _Project(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "tickets":
-			out.Values[i] = ec._Project_tickets(ctx, field, obj)
 		case "description":
 			out.Values[i] = ec._Project_description(ctx, field, obj)
 		case "startDate":
 			out.Values[i] = ec._Project_startDate(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "createdAt":
+			out.Values[i] = ec._Project_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updatedAt":
+			out.Values[i] = ec._Project_updatedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var projectEmployeeImplementors = []string{"ProjectEmployee"}
+
+func (ec *executionContext) _ProjectEmployee(ctx context.Context, sel ast.SelectionSet, obj *model.ProjectEmployee) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, projectEmployeeImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ProjectEmployee")
+		case "projectID":
+			out.Values[i] = ec._ProjectEmployee_projectID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "employeeID":
+			out.Values[i] = ec._ProjectEmployee_employeeID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "role":
+			out.Values[i] = ec._ProjectEmployee_role(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "createdAt":
+			out.Values[i] = ec._ProjectEmployee_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var projectTeamImplementors = []string{"ProjectTeam"}
+
+func (ec *executionContext) _ProjectTeam(ctx context.Context, sel ast.SelectionSet, obj *model.ProjectTeam) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, projectTeamImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ProjectTeam")
+		case "projectID":
+			out.Values[i] = ec._ProjectTeam_projectID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "teamID":
+			out.Values[i] = ec._ProjectTeam_teamID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "createdAt":
+			out.Values[i] = ec._ProjectTeam_createdAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -2261,15 +3282,19 @@ func (ec *executionContext) _Task(ctx context.Context, sel ast.SelectionSet, obj
 			}
 		case "description":
 			out.Values[i] = ec._Task_description(ctx, field, obj)
-		case "assignedTo":
-			out.Values[i] = ec._Task_assignedTo(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
+		case "assignedToID":
+			out.Values[i] = ec._Task_assignedToID(ctx, field, obj)
+		case "projectID":
+			out.Values[i] = ec._Task_projectID(ctx, field, obj)
 		case "dueDate":
 			out.Values[i] = ec._Task_dueDate(ctx, field, obj)
 		case "status":
 			out.Values[i] = ec._Task_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "priority":
+			out.Values[i] = ec._Task_priority(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -2319,10 +3344,74 @@ func (ec *executionContext) _Team(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "teamLeader":
-			out.Values[i] = ec._Team_teamLeader(ctx, field, obj)
-		case "engineers":
-			out.Values[i] = ec._Team_engineers(ctx, field, obj)
+		case "teamLeaderID":
+			out.Values[i] = ec._Team_teamLeaderID(ctx, field, obj)
+		case "name":
+			out.Values[i] = ec._Team_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "description":
+			out.Values[i] = ec._Team_description(ctx, field, obj)
+		case "createdAt":
+			out.Values[i] = ec._Team_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updatedAt":
+			out.Values[i] = ec._Team_updatedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var teamEngineerImplementors = []string{"TeamEngineer"}
+
+func (ec *executionContext) _TeamEngineer(ctx context.Context, sel ast.SelectionSet, obj *model.TeamEngineer) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, teamEngineerImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("TeamEngineer")
+		case "teamID":
+			out.Values[i] = ec._TeamEngineer_teamID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "engineerID":
+			out.Values[i] = ec._TeamEngineer_engineerID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "createdAt":
+			out.Values[i] = ec._TeamEngineer_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2362,6 +3451,13 @@ func (ec *executionContext) _Ticket(ctx context.Context, sel ast.SelectionSet, o
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "projectID":
+			out.Values[i] = ec._Ticket_projectID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "assignedToID":
+			out.Values[i] = ec._Ticket_assignedToID(ctx, field, obj)
 		case "status":
 			out.Values[i] = ec._Ticket_status(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -2374,6 +3470,11 @@ func (ec *executionContext) _Ticket(ctx context.Context, sel ast.SelectionSet, o
 			}
 		case "description":
 			out.Values[i] = ec._Ticket_description(ctx, field, obj)
+		case "priority":
+			out.Values[i] = ec._Ticket_priority(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "createdAt":
 			out.Values[i] = ec._Ticket_createdAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -2381,11 +3482,6 @@ func (ec *executionContext) _Ticket(ctx context.Context, sel ast.SelectionSet, o
 			}
 		case "completedAt":
 			out.Values[i] = ec._Ticket_completedAt(ctx, field, obj)
-		case "project":
-			out.Values[i] = ec._Ticket_project(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2550,6 +3646,26 @@ func (ec *executionContext) marshalNNotification2ᚖgithubᚗcomᚋJonJensonᚑM
 	return ec._Notification(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNNotificationType2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐNotificationType(ctx context.Context, v any) (model.NotificationType, error) {
+	var res model.NotificationType
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNNotificationType2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐNotificationType(ctx context.Context, sel ast.SelectionSet, v model.NotificationType) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) unmarshalNPriority2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐPriority(ctx context.Context, v any) (model.Priority, error) {
+	var res model.Priority
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNPriority2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐPriority(ctx context.Context, sel ast.SelectionSet, v model.Priority) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) marshalNProject2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProject(ctx context.Context, sel ast.SelectionSet, v model.Project) graphql.Marshaler {
 	return ec._Project(ctx, sel, &v)
 }
@@ -2608,8 +3724,134 @@ func (ec *executionContext) marshalNProject2ᚖgithubᚗcomᚋJonJensonᚑMFIn�
 	return ec._Project(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNProjectEmployee2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectEmployee(ctx context.Context, sel ast.SelectionSet, v model.ProjectEmployee) graphql.Marshaler {
+	return ec._ProjectEmployee(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNProjectEmployee2ᚕᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectEmployeeᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.ProjectEmployee) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNProjectEmployee2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectEmployee(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNProjectEmployee2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectEmployee(ctx context.Context, sel ast.SelectionSet, v *model.ProjectEmployee) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ProjectEmployee(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNProjectEmployeeInput2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectEmployeeInput(ctx context.Context, v any) (model.ProjectEmployeeInput, error) {
+	res, err := ec.unmarshalInputProjectEmployeeInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNProjectInput2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectInput(ctx context.Context, v any) (model.ProjectInput, error) {
 	res, err := ec.unmarshalInputProjectInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNProjectTeam2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectTeam(ctx context.Context, sel ast.SelectionSet, v model.ProjectTeam) graphql.Marshaler {
+	return ec._ProjectTeam(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNProjectTeam2ᚕᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectTeamᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.ProjectTeam) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNProjectTeam2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectTeam(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNProjectTeam2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectTeam(ctx context.Context, sel ast.SelectionSet, v *model.ProjectTeam) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ProjectTeam(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNProjectTeamInput2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectTeamInput(ctx context.Context, v any) (model.ProjectTeamInput, error) {
+	res, err := ec.unmarshalInputProjectTeamInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -2754,6 +3996,69 @@ func (ec *executionContext) marshalNTeam2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋpr
 	return ec._Team(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNTeamEngineer2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTeamEngineer(ctx context.Context, sel ast.SelectionSet, v model.TeamEngineer) graphql.Marshaler {
+	return ec._TeamEngineer(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNTeamEngineer2ᚕᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTeamEngineerᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.TeamEngineer) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNTeamEngineer2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTeamEngineer(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNTeamEngineer2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTeamEngineer(ctx context.Context, sel ast.SelectionSet, v *model.TeamEngineer) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._TeamEngineer(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNTeamEngineerInput2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTeamEngineerInput(ctx context.Context, v any) (model.TeamEngineerInput, error) {
+	res, err := ec.unmarshalInputTeamEngineerInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNTeamInput2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTeamInput(ctx context.Context, v any) (model.TeamInput, error) {
 	res, err := ec.unmarshalInputTeamInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -2858,58 +4163,43 @@ func (ec *executionContext) marshalODateTime2ᚖtimeᚐTime(ctx context.Context,
 	return res
 }
 
-func (ec *executionContext) marshalOEmployee2ᚕᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐEmployeeᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Employee) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNEmployee2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐEmployee(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
 func (ec *executionContext) marshalOEmployee2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐEmployee(ctx context.Context, sel ast.SelectionSet, v *model.Employee) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Employee(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalONotificationType2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐNotificationType(ctx context.Context, v any) (*model.NotificationType, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.NotificationType)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalONotificationType2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐNotificationType(ctx context.Context, sel ast.SelectionSet, v *model.NotificationType) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
+func (ec *executionContext) unmarshalOPriority2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐPriority(ctx context.Context, v any) (*model.Priority, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.Priority)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOPriority2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐPriority(ctx context.Context, sel ast.SelectionSet, v *model.Priority) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalOProject2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProject(ctx context.Context, sel ast.SelectionSet, v *model.Project) graphql.Marshaler {
@@ -2942,105 +4232,11 @@ func (ec *executionContext) marshalOTask2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋpr
 	return ec._Task(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOTeam2ᚕᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTeamᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Team) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNTeam2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTeam(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
 func (ec *executionContext) marshalOTeam2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTeam(ctx context.Context, sel ast.SelectionSet, v *model.Team) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Team(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOTicket2ᚕᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTicketᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Ticket) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNTicket2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTicket(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
 }
 
 func (ec *executionContext) marshalOTicket2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTicket(ctx context.Context, sel ast.SelectionSet, v *model.Ticket) graphql.Marshaler {

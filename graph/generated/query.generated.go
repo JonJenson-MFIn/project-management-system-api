@@ -19,17 +19,23 @@ import (
 
 type QueryResolver interface {
 	Employees(ctx context.Context) ([]*model.Employee, error)
-	Employee(ctx context.Context, id string) (*model.Employee, error)
+	Employee(ctx context.Context, id int) (*model.Employee, error)
 	SignIn(ctx context.Context, email string, password string) (bool, error)
 	Projects(ctx context.Context) ([]*model.Project, error)
-	Project(ctx context.Context, id string) (*model.Project, error)
+	Project(ctx context.Context, id int) (*model.Project, error)
 	Tasks(ctx context.Context) ([]*model.Task, error)
-	Task(ctx context.Context, id string) (*model.Task, error)
+	Task(ctx context.Context, id int) (*model.Task, error)
 	Tickets(ctx context.Context) ([]*model.Ticket, error)
-	Ticket(ctx context.Context, id string) (*model.Ticket, error)
+	Ticket(ctx context.Context, id int) (*model.Ticket, error)
 	Teams(ctx context.Context) ([]*model.Team, error)
-	Team(ctx context.Context, id string) (*model.Team, error)
-	Notifications(ctx context.Context, employeeID string) ([]*model.Notification, error)
+	Team(ctx context.Context, id int) (*model.Team, error)
+	Notifications(ctx context.Context, employeeID int) ([]*model.Notification, error)
+	TeamEngineers(ctx context.Context, teamID int) ([]*model.TeamEngineer, error)
+	ProjectTeams(ctx context.Context, projectID int) ([]*model.ProjectTeam, error)
+	ProjectEmployees(ctx context.Context, projectID int) ([]*model.ProjectEmployee, error)
+	EmployeesByProject(ctx context.Context, projectID int) ([]*model.Employee, error)
+	TeamsByProject(ctx context.Context, projectID int) ([]*model.Team, error)
+	EngineersByTeam(ctx context.Context, teamID int) ([]*model.Employee, error)
 }
 
 // endregion ************************** generated!.gotpl **************************
@@ -50,7 +56,7 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 func (ec *executionContext) field_Query_employee_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
@@ -58,10 +64,32 @@ func (ec *executionContext) field_Query_employee_args(ctx context.Context, rawAr
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_employeesByProject_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "projectID", ec.unmarshalNInt2int)
+	if err != nil {
+		return nil, err
+	}
+	args["projectID"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_engineersByTeam_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "teamID", ec.unmarshalNInt2int)
+	if err != nil {
+		return nil, err
+	}
+	args["teamID"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_notifications_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "employeeID", ec.unmarshalNID2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "employeeID", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
@@ -69,10 +97,32 @@ func (ec *executionContext) field_Query_notifications_args(ctx context.Context, 
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_projectEmployees_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "projectID", ec.unmarshalNInt2int)
+	if err != nil {
+		return nil, err
+	}
+	args["projectID"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_projectTeams_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "projectID", ec.unmarshalNInt2int)
+	if err != nil {
+		return nil, err
+	}
+	args["projectID"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_project_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
@@ -99,18 +149,29 @@ func (ec *executionContext) field_Query_signIn_args(ctx context.Context, rawArgs
 func (ec *executionContext) field_Query_task_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
 	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_teamEngineers_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "teamID", ec.unmarshalNInt2int)
+	if err != nil {
+		return nil, err
+	}
+	args["teamID"] = arg0
 	return args, nil
 }
 
 func (ec *executionContext) field_Query_team_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
@@ -118,10 +179,21 @@ func (ec *executionContext) field_Query_team_args(ctx context.Context, rawArgs m
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_teamsByProject_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "projectID", ec.unmarshalNInt2int)
+	if err != nil {
+		return nil, err
+	}
+	args["projectID"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_ticket_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
@@ -186,8 +258,12 @@ func (ec *executionContext) fieldContext_Query_employees(_ context.Context, fiel
 				return ec.fieldContext_Employee_role(ctx, field)
 			case "active":
 				return ec.fieldContext_Employee_active(ctx, field)
-			case "project_assigned":
-				return ec.fieldContext_Employee_project_assigned(ctx, field)
+			case "projectAssignedID":
+				return ec.fieldContext_Employee_projectAssignedID(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Employee_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Employee_updatedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Employee", field.Name)
 		},
@@ -209,7 +285,7 @@ func (ec *executionContext) _Query_employee(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Employee(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Query().Employee(rctx, fc.Args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -241,8 +317,12 @@ func (ec *executionContext) fieldContext_Query_employee(ctx context.Context, fie
 				return ec.fieldContext_Employee_role(ctx, field)
 			case "active":
 				return ec.fieldContext_Employee_active(ctx, field)
-			case "project_assigned":
-				return ec.fieldContext_Employee_project_assigned(ctx, field)
+			case "projectAssignedID":
+				return ec.fieldContext_Employee_projectAssignedID(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Employee_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Employee_updatedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Employee", field.Name)
 		},
@@ -357,20 +437,20 @@ func (ec *executionContext) fieldContext_Query_projects(_ context.Context, field
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Project_id(ctx, field)
-			case "manager":
-				return ec.fieldContext_Project_manager(ctx, field)
-			case "teams":
-				return ec.fieldContext_Project_teams(ctx, field)
+			case "managerID":
+				return ec.fieldContext_Project_managerID(ctx, field)
 			case "name":
 				return ec.fieldContext_Project_name(ctx, field)
 			case "status":
 				return ec.fieldContext_Project_status(ctx, field)
-			case "tickets":
-				return ec.fieldContext_Project_tickets(ctx, field)
 			case "description":
 				return ec.fieldContext_Project_description(ctx, field)
 			case "startDate":
 				return ec.fieldContext_Project_startDate(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Project_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Project_updatedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Project", field.Name)
 		},
@@ -392,7 +472,7 @@ func (ec *executionContext) _Query_project(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Project(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Query().Project(rctx, fc.Args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -416,20 +496,20 @@ func (ec *executionContext) fieldContext_Query_project(ctx context.Context, fiel
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Project_id(ctx, field)
-			case "manager":
-				return ec.fieldContext_Project_manager(ctx, field)
-			case "teams":
-				return ec.fieldContext_Project_teams(ctx, field)
+			case "managerID":
+				return ec.fieldContext_Project_managerID(ctx, field)
 			case "name":
 				return ec.fieldContext_Project_name(ctx, field)
 			case "status":
 				return ec.fieldContext_Project_status(ctx, field)
-			case "tickets":
-				return ec.fieldContext_Project_tickets(ctx, field)
 			case "description":
 				return ec.fieldContext_Project_description(ctx, field)
 			case "startDate":
 				return ec.fieldContext_Project_startDate(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Project_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Project_updatedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Project", field.Name)
 		},
@@ -493,12 +573,16 @@ func (ec *executionContext) fieldContext_Query_tasks(_ context.Context, field gr
 				return ec.fieldContext_Task_title(ctx, field)
 			case "description":
 				return ec.fieldContext_Task_description(ctx, field)
-			case "assignedTo":
-				return ec.fieldContext_Task_assignedTo(ctx, field)
+			case "assignedToID":
+				return ec.fieldContext_Task_assignedToID(ctx, field)
+			case "projectID":
+				return ec.fieldContext_Task_projectID(ctx, field)
 			case "dueDate":
 				return ec.fieldContext_Task_dueDate(ctx, field)
 			case "status":
 				return ec.fieldContext_Task_status(ctx, field)
+			case "priority":
+				return ec.fieldContext_Task_priority(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Task_createdAt(ctx, field)
 			case "completedAt":
@@ -524,7 +608,7 @@ func (ec *executionContext) _Query_task(ctx context.Context, field graphql.Colle
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Task(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Query().Task(rctx, fc.Args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -552,12 +636,16 @@ func (ec *executionContext) fieldContext_Query_task(ctx context.Context, field g
 				return ec.fieldContext_Task_title(ctx, field)
 			case "description":
 				return ec.fieldContext_Task_description(ctx, field)
-			case "assignedTo":
-				return ec.fieldContext_Task_assignedTo(ctx, field)
+			case "assignedToID":
+				return ec.fieldContext_Task_assignedToID(ctx, field)
+			case "projectID":
+				return ec.fieldContext_Task_projectID(ctx, field)
 			case "dueDate":
 				return ec.fieldContext_Task_dueDate(ctx, field)
 			case "status":
 				return ec.fieldContext_Task_status(ctx, field)
+			case "priority":
+				return ec.fieldContext_Task_priority(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Task_createdAt(ctx, field)
 			case "completedAt":
@@ -621,18 +709,22 @@ func (ec *executionContext) fieldContext_Query_tickets(_ context.Context, field 
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Ticket_id(ctx, field)
+			case "projectID":
+				return ec.fieldContext_Ticket_projectID(ctx, field)
+			case "assignedToID":
+				return ec.fieldContext_Ticket_assignedToID(ctx, field)
 			case "status":
 				return ec.fieldContext_Ticket_status(ctx, field)
 			case "title":
 				return ec.fieldContext_Ticket_title(ctx, field)
 			case "description":
 				return ec.fieldContext_Ticket_description(ctx, field)
+			case "priority":
+				return ec.fieldContext_Ticket_priority(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Ticket_createdAt(ctx, field)
 			case "completedAt":
 				return ec.fieldContext_Ticket_completedAt(ctx, field)
-			case "project":
-				return ec.fieldContext_Ticket_project(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Ticket", field.Name)
 		},
@@ -654,7 +746,7 @@ func (ec *executionContext) _Query_ticket(ctx context.Context, field graphql.Col
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Ticket(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Query().Ticket(rctx, fc.Args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -678,18 +770,22 @@ func (ec *executionContext) fieldContext_Query_ticket(ctx context.Context, field
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Ticket_id(ctx, field)
+			case "projectID":
+				return ec.fieldContext_Ticket_projectID(ctx, field)
+			case "assignedToID":
+				return ec.fieldContext_Ticket_assignedToID(ctx, field)
 			case "status":
 				return ec.fieldContext_Ticket_status(ctx, field)
 			case "title":
 				return ec.fieldContext_Ticket_title(ctx, field)
 			case "description":
 				return ec.fieldContext_Ticket_description(ctx, field)
+			case "priority":
+				return ec.fieldContext_Ticket_priority(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Ticket_createdAt(ctx, field)
 			case "completedAt":
 				return ec.fieldContext_Ticket_completedAt(ctx, field)
-			case "project":
-				return ec.fieldContext_Ticket_project(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Ticket", field.Name)
 		},
@@ -749,10 +845,16 @@ func (ec *executionContext) fieldContext_Query_teams(_ context.Context, field gr
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Team_id(ctx, field)
-			case "teamLeader":
-				return ec.fieldContext_Team_teamLeader(ctx, field)
-			case "engineers":
-				return ec.fieldContext_Team_engineers(ctx, field)
+			case "teamLeaderID":
+				return ec.fieldContext_Team_teamLeaderID(ctx, field)
+			case "name":
+				return ec.fieldContext_Team_name(ctx, field)
+			case "description":
+				return ec.fieldContext_Team_description(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Team_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Team_updatedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Team", field.Name)
 		},
@@ -774,7 +876,7 @@ func (ec *executionContext) _Query_team(ctx context.Context, field graphql.Colle
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Team(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Query().Team(rctx, fc.Args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -798,10 +900,16 @@ func (ec *executionContext) fieldContext_Query_team(ctx context.Context, field g
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Team_id(ctx, field)
-			case "teamLeader":
-				return ec.fieldContext_Team_teamLeader(ctx, field)
-			case "engineers":
-				return ec.fieldContext_Team_engineers(ctx, field)
+			case "teamLeaderID":
+				return ec.fieldContext_Team_teamLeaderID(ctx, field)
+			case "name":
+				return ec.fieldContext_Team_name(ctx, field)
+			case "description":
+				return ec.fieldContext_Team_description(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Team_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Team_updatedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Team", field.Name)
 		},
@@ -834,7 +942,7 @@ func (ec *executionContext) _Query_notifications(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Notifications(rctx, fc.Args["employeeID"].(string))
+		return ec.resolvers.Query().Notifications(rctx, fc.Args["employeeID"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -863,8 +971,10 @@ func (ec *executionContext) fieldContext_Query_notifications(ctx context.Context
 				return ec.fieldContext_Notification_id(ctx, field)
 			case "message":
 				return ec.fieldContext_Notification_message(ctx, field)
-			case "employee":
-				return ec.fieldContext_Notification_employee(ctx, field)
+			case "employeeID":
+				return ec.fieldContext_Notification_employeeID(ctx, field)
+			case "type":
+				return ec.fieldContext_Notification_type(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Notification_createdAt(ctx, field)
 			case "read":
@@ -881,6 +991,412 @@ func (ec *executionContext) fieldContext_Query_notifications(ctx context.Context
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_notifications_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_teamEngineers(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_teamEngineers(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().TeamEngineers(rctx, fc.Args["teamID"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.TeamEngineer)
+	fc.Result = res
+	return ec.marshalNTeamEngineer2ᚕᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTeamEngineerᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_teamEngineers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "teamID":
+				return ec.fieldContext_TeamEngineer_teamID(ctx, field)
+			case "engineerID":
+				return ec.fieldContext_TeamEngineer_engineerID(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_TeamEngineer_createdAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TeamEngineer", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_teamEngineers_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_projectTeams(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_projectTeams(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().ProjectTeams(rctx, fc.Args["projectID"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.ProjectTeam)
+	fc.Result = res
+	return ec.marshalNProjectTeam2ᚕᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectTeamᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_projectTeams(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "projectID":
+				return ec.fieldContext_ProjectTeam_projectID(ctx, field)
+			case "teamID":
+				return ec.fieldContext_ProjectTeam_teamID(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_ProjectTeam_createdAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ProjectTeam", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_projectTeams_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_projectEmployees(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_projectEmployees(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().ProjectEmployees(rctx, fc.Args["projectID"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.ProjectEmployee)
+	fc.Result = res
+	return ec.marshalNProjectEmployee2ᚕᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectEmployeeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_projectEmployees(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "projectID":
+				return ec.fieldContext_ProjectEmployee_projectID(ctx, field)
+			case "employeeID":
+				return ec.fieldContext_ProjectEmployee_employeeID(ctx, field)
+			case "role":
+				return ec.fieldContext_ProjectEmployee_role(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_ProjectEmployee_createdAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ProjectEmployee", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_projectEmployees_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_employeesByProject(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_employeesByProject(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().EmployeesByProject(rctx, fc.Args["projectID"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Employee)
+	fc.Result = res
+	return ec.marshalNEmployee2ᚕᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐEmployeeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_employeesByProject(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Employee_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Employee_name(ctx, field)
+			case "email":
+				return ec.fieldContext_Employee_email(ctx, field)
+			case "role":
+				return ec.fieldContext_Employee_role(ctx, field)
+			case "active":
+				return ec.fieldContext_Employee_active(ctx, field)
+			case "projectAssignedID":
+				return ec.fieldContext_Employee_projectAssignedID(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Employee_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Employee_updatedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Employee", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_employeesByProject_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_teamsByProject(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_teamsByProject(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().TeamsByProject(rctx, fc.Args["projectID"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Team)
+	fc.Result = res
+	return ec.marshalNTeam2ᚕᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTeamᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_teamsByProject(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Team_id(ctx, field)
+			case "teamLeaderID":
+				return ec.fieldContext_Team_teamLeaderID(ctx, field)
+			case "name":
+				return ec.fieldContext_Team_name(ctx, field)
+			case "description":
+				return ec.fieldContext_Team_description(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Team_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Team_updatedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Team", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_teamsByProject_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_engineersByTeam(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_engineersByTeam(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().EngineersByTeam(rctx, fc.Args["teamID"].(int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Employee)
+	fc.Result = res
+	return ec.marshalNEmployee2ᚕᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐEmployeeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_engineersByTeam(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Employee_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Employee_name(ctx, field)
+			case "email":
+				return ec.fieldContext_Employee_email(ctx, field)
+			case "role":
+				return ec.fieldContext_Employee_role(ctx, field)
+			case "active":
+				return ec.fieldContext_Employee_active(ctx, field)
+			case "projectAssignedID":
+				return ec.fieldContext_Employee_projectAssignedID(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Employee_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Employee_updatedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Employee", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_engineersByTeam_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -1286,6 +1802,138 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_notifications(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "teamEngineers":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_teamEngineers(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "projectTeams":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_projectTeams(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "projectEmployees":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_projectEmployees(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "employeesByProject":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_employeesByProject(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "teamsByProject":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_teamsByProject(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "engineersByTeam":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_engineersByTeam(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}

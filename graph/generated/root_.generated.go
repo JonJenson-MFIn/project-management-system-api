@@ -43,93 +43,135 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Employee struct {
-		Active          func(childComplexity int) int
-		Email           func(childComplexity int) int
-		ID              func(childComplexity int) int
-		Name            func(childComplexity int) int
-		ProjectAssigned func(childComplexity int) int
-		Role            func(childComplexity int) int
+		Active            func(childComplexity int) int
+		CreatedAt         func(childComplexity int) int
+		Email             func(childComplexity int) int
+		ID                func(childComplexity int) int
+		Name              func(childComplexity int) int
+		ProjectAssignedID func(childComplexity int) int
+		Role              func(childComplexity int) int
+		UpdatedAt         func(childComplexity int) int
 	}
 
 	Mutation struct {
-		AddEmployee          func(childComplexity int, input model.EmployeeInput) int
-		AddNotification      func(childComplexity int, message string, employeeID string) int
-		AddProject           func(childComplexity int, input model.ProjectInput) int
-		AddTask              func(childComplexity int, input model.TaskInput) int
-		AddTeam              func(childComplexity int, input model.TeamInput) int
-		AddTicket            func(childComplexity int, input model.TicketInput) int
-		DeleteEmployee       func(childComplexity int, id string) int
-		DeleteProject        func(childComplexity int, id string) int
-		DeleteTask           func(childComplexity int, id string) int
-		DeleteTeam           func(childComplexity int, id string) int
-		DeleteTicket         func(childComplexity int, id string) int
-		MarkNotificationRead func(childComplexity int, id string) int
-		UpdateEmployee       func(childComplexity int, id string, input model.EmployeeInput) int
-		UpdateProject        func(childComplexity int, id string, input model.ProjectInput) int
-		UpdateTask           func(childComplexity int, id string, input model.TaskInput) int
-		UpdateTeam           func(childComplexity int, id string, input model.TeamInput) int
-		UpdateTicket         func(childComplexity int, id string, input model.TicketInput) int
+		AddEmployee               func(childComplexity int, input model.EmployeeInput) int
+		AddNotification           func(childComplexity int, message string, employeeID int, typeArg *model.NotificationType) int
+		AddProject                func(childComplexity int, input model.ProjectInput) int
+		AddProjectEmployee        func(childComplexity int, input model.ProjectEmployeeInput) int
+		AddProjectTeam            func(childComplexity int, input model.ProjectTeamInput) int
+		AddTask                   func(childComplexity int, input model.TaskInput) int
+		AddTeam                   func(childComplexity int, input model.TeamInput) int
+		AddTeamEngineer           func(childComplexity int, input model.TeamEngineerInput) int
+		AddTicket                 func(childComplexity int, input model.TicketInput) int
+		DeleteEmployee            func(childComplexity int, id int) int
+		DeleteProject             func(childComplexity int, id int) int
+		DeleteTask                func(childComplexity int, id int) int
+		DeleteTeam                func(childComplexity int, id int) int
+		DeleteTicket              func(childComplexity int, id int) int
+		MarkNotificationRead      func(childComplexity int, id int) int
+		RemoveProjectEmployee     func(childComplexity int, input model.ProjectEmployeeInput) int
+		RemoveProjectTeam         func(childComplexity int, input model.ProjectTeamInput) int
+		RemoveTeamEngineer        func(childComplexity int, input model.TeamEngineerInput) int
+		UpdateEmployee            func(childComplexity int, id int, input model.EmployeeInput) int
+		UpdateProject             func(childComplexity int, id int, input model.ProjectInput) int
+		UpdateProjectEmployeeRole func(childComplexity int, input model.ProjectEmployeeInput) int
+		UpdateTask                func(childComplexity int, id int, input model.TaskInput) int
+		UpdateTeam                func(childComplexity int, id int, input model.TeamInput) int
+		UpdateTicket              func(childComplexity int, id int, input model.TicketInput) int
 	}
 
 	Notification struct {
-		CreatedAt func(childComplexity int) int
-		Employee  func(childComplexity int) int
-		ID        func(childComplexity int) int
-		Message   func(childComplexity int) int
-		Read      func(childComplexity int) int
+		CreatedAt  func(childComplexity int) int
+		EmployeeID func(childComplexity int) int
+		ID         func(childComplexity int) int
+		Message    func(childComplexity int) int
+		Read       func(childComplexity int) int
+		Type       func(childComplexity int) int
 	}
 
 	Project struct {
+		CreatedAt   func(childComplexity int) int
 		Description func(childComplexity int) int
 		ID          func(childComplexity int) int
-		Manager     func(childComplexity int) int
+		ManagerID   func(childComplexity int) int
 		Name        func(childComplexity int) int
 		StartDate   func(childComplexity int) int
 		Status      func(childComplexity int) int
-		Teams       func(childComplexity int) int
-		Tickets     func(childComplexity int) int
+		UpdatedAt   func(childComplexity int) int
+	}
+
+	ProjectEmployee struct {
+		CreatedAt  func(childComplexity int) int
+		EmployeeID func(childComplexity int) int
+		ProjectID  func(childComplexity int) int
+		Role       func(childComplexity int) int
+	}
+
+	ProjectTeam struct {
+		CreatedAt func(childComplexity int) int
+		ProjectID func(childComplexity int) int
+		TeamID    func(childComplexity int) int
 	}
 
 	Query struct {
-		Employee      func(childComplexity int, id string) int
-		Employees     func(childComplexity int) int
-		Notifications func(childComplexity int, employeeID string) int
-		Project       func(childComplexity int, id string) int
-		Projects      func(childComplexity int) int
-		SignIn        func(childComplexity int, email string, password string) int
-		Task          func(childComplexity int, id string) int
-		Tasks         func(childComplexity int) int
-		Team          func(childComplexity int, id string) int
-		Teams         func(childComplexity int) int
-		Ticket        func(childComplexity int, id string) int
-		Tickets       func(childComplexity int) int
+		Employee           func(childComplexity int, id int) int
+		Employees          func(childComplexity int) int
+		EmployeesByProject func(childComplexity int, projectID int) int
+		EngineersByTeam    func(childComplexity int, teamID int) int
+		Notifications      func(childComplexity int, employeeID int) int
+		Project            func(childComplexity int, id int) int
+		ProjectEmployees   func(childComplexity int, projectID int) int
+		ProjectTeams       func(childComplexity int, projectID int) int
+		Projects           func(childComplexity int) int
+		SignIn             func(childComplexity int, email string, password string) int
+		Task               func(childComplexity int, id int) int
+		Tasks              func(childComplexity int) int
+		Team               func(childComplexity int, id int) int
+		TeamEngineers      func(childComplexity int, teamID int) int
+		Teams              func(childComplexity int) int
+		TeamsByProject     func(childComplexity int, projectID int) int
+		Ticket             func(childComplexity int, id int) int
+		Tickets            func(childComplexity int) int
 	}
 
 	Task struct {
-		AssignedTo  func(childComplexity int) int
-		CompletedAt func(childComplexity int) int
-		CreatedAt   func(childComplexity int) int
-		Description func(childComplexity int) int
-		DueDate     func(childComplexity int) int
-		ID          func(childComplexity int) int
-		Status      func(childComplexity int) int
-		Title       func(childComplexity int) int
+		AssignedToID func(childComplexity int) int
+		CompletedAt  func(childComplexity int) int
+		CreatedAt    func(childComplexity int) int
+		Description  func(childComplexity int) int
+		DueDate      func(childComplexity int) int
+		ID           func(childComplexity int) int
+		Priority     func(childComplexity int) int
+		ProjectID    func(childComplexity int) int
+		Status       func(childComplexity int) int
+		Title        func(childComplexity int) int
 	}
 
 	Team struct {
-		Engineers  func(childComplexity int) int
-		ID         func(childComplexity int) int
-		TeamLeader func(childComplexity int) int
+		CreatedAt    func(childComplexity int) int
+		Description  func(childComplexity int) int
+		ID           func(childComplexity int) int
+		Name         func(childComplexity int) int
+		TeamLeaderID func(childComplexity int) int
+		UpdatedAt    func(childComplexity int) int
+	}
+
+	TeamEngineer struct {
+		CreatedAt  func(childComplexity int) int
+		EngineerID func(childComplexity int) int
+		TeamID     func(childComplexity int) int
 	}
 
 	Ticket struct {
-		CompletedAt func(childComplexity int) int
-		CreatedAt   func(childComplexity int) int
-		Description func(childComplexity int) int
-		ID          func(childComplexity int) int
-		Project     func(childComplexity int) int
-		Status      func(childComplexity int) int
-		Title       func(childComplexity int) int
+		AssignedToID func(childComplexity int) int
+		CompletedAt  func(childComplexity int) int
+		CreatedAt    func(childComplexity int) int
+		Description  func(childComplexity int) int
+		ID           func(childComplexity int) int
+		Priority     func(childComplexity int) int
+		ProjectID    func(childComplexity int) int
+		Status       func(childComplexity int) int
+		Title        func(childComplexity int) int
 	}
 }
 
@@ -159,6 +201,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Employee.Active(childComplexity), true
 
+	case "Employee.createdAt":
+		if e.complexity.Employee.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.Employee.CreatedAt(childComplexity), true
+
 	case "Employee.email":
 		if e.complexity.Employee.Email == nil {
 			break
@@ -180,12 +229,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Employee.Name(childComplexity), true
 
-	case "Employee.project_assigned":
-		if e.complexity.Employee.ProjectAssigned == nil {
+	case "Employee.projectAssignedID":
+		if e.complexity.Employee.ProjectAssignedID == nil {
 			break
 		}
 
-		return e.complexity.Employee.ProjectAssigned(childComplexity), true
+		return e.complexity.Employee.ProjectAssignedID(childComplexity), true
 
 	case "Employee.role":
 		if e.complexity.Employee.Role == nil {
@@ -193,6 +242,13 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Employee.Role(childComplexity), true
+
+	case "Employee.updatedAt":
+		if e.complexity.Employee.UpdatedAt == nil {
+			break
+		}
+
+		return e.complexity.Employee.UpdatedAt(childComplexity), true
 
 	case "Mutation.addEmployee":
 		if e.complexity.Mutation.AddEmployee == nil {
@@ -216,7 +272,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.AddNotification(childComplexity, args["message"].(string), args["employeeID"].(string)), true
+		return e.complexity.Mutation.AddNotification(childComplexity, args["message"].(string), args["employeeID"].(int), args["type"].(*model.NotificationType)), true
 
 	case "Mutation.addProject":
 		if e.complexity.Mutation.AddProject == nil {
@@ -229,6 +285,30 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Mutation.AddProject(childComplexity, args["input"].(model.ProjectInput)), true
+
+	case "Mutation.addProjectEmployee":
+		if e.complexity.Mutation.AddProjectEmployee == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addProjectEmployee_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddProjectEmployee(childComplexity, args["input"].(model.ProjectEmployeeInput)), true
+
+	case "Mutation.addProjectTeam":
+		if e.complexity.Mutation.AddProjectTeam == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addProjectTeam_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddProjectTeam(childComplexity, args["input"].(model.ProjectTeamInput)), true
 
 	case "Mutation.addTask":
 		if e.complexity.Mutation.AddTask == nil {
@@ -254,6 +334,18 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Mutation.AddTeam(childComplexity, args["input"].(model.TeamInput)), true
 
+	case "Mutation.addTeamEngineer":
+		if e.complexity.Mutation.AddTeamEngineer == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addTeamEngineer_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddTeamEngineer(childComplexity, args["input"].(model.TeamEngineerInput)), true
+
 	case "Mutation.addTicket":
 		if e.complexity.Mutation.AddTicket == nil {
 			break
@@ -276,7 +368,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteEmployee(childComplexity, args["id"].(string)), true
+		return e.complexity.Mutation.DeleteEmployee(childComplexity, args["id"].(int)), true
 
 	case "Mutation.deleteProject":
 		if e.complexity.Mutation.DeleteProject == nil {
@@ -288,7 +380,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteProject(childComplexity, args["id"].(string)), true
+		return e.complexity.Mutation.DeleteProject(childComplexity, args["id"].(int)), true
 
 	case "Mutation.deleteTask":
 		if e.complexity.Mutation.DeleteTask == nil {
@@ -300,7 +392,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteTask(childComplexity, args["id"].(string)), true
+		return e.complexity.Mutation.DeleteTask(childComplexity, args["id"].(int)), true
 
 	case "Mutation.deleteTeam":
 		if e.complexity.Mutation.DeleteTeam == nil {
@@ -312,7 +404,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteTeam(childComplexity, args["id"].(string)), true
+		return e.complexity.Mutation.DeleteTeam(childComplexity, args["id"].(int)), true
 
 	case "Mutation.deleteTicket":
 		if e.complexity.Mutation.DeleteTicket == nil {
@@ -324,7 +416,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteTicket(childComplexity, args["id"].(string)), true
+		return e.complexity.Mutation.DeleteTicket(childComplexity, args["id"].(int)), true
 
 	case "Mutation.markNotificationRead":
 		if e.complexity.Mutation.MarkNotificationRead == nil {
@@ -336,7 +428,43 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.MarkNotificationRead(childComplexity, args["id"].(string)), true
+		return e.complexity.Mutation.MarkNotificationRead(childComplexity, args["id"].(int)), true
+
+	case "Mutation.removeProjectEmployee":
+		if e.complexity.Mutation.RemoveProjectEmployee == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_removeProjectEmployee_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RemoveProjectEmployee(childComplexity, args["input"].(model.ProjectEmployeeInput)), true
+
+	case "Mutation.removeProjectTeam":
+		if e.complexity.Mutation.RemoveProjectTeam == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_removeProjectTeam_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RemoveProjectTeam(childComplexity, args["input"].(model.ProjectTeamInput)), true
+
+	case "Mutation.removeTeamEngineer":
+		if e.complexity.Mutation.RemoveTeamEngineer == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_removeTeamEngineer_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RemoveTeamEngineer(childComplexity, args["input"].(model.TeamEngineerInput)), true
 
 	case "Mutation.updateEmployee":
 		if e.complexity.Mutation.UpdateEmployee == nil {
@@ -348,7 +476,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateEmployee(childComplexity, args["id"].(string), args["input"].(model.EmployeeInput)), true
+		return e.complexity.Mutation.UpdateEmployee(childComplexity, args["id"].(int), args["input"].(model.EmployeeInput)), true
 
 	case "Mutation.updateProject":
 		if e.complexity.Mutation.UpdateProject == nil {
@@ -360,7 +488,19 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateProject(childComplexity, args["id"].(string), args["input"].(model.ProjectInput)), true
+		return e.complexity.Mutation.UpdateProject(childComplexity, args["id"].(int), args["input"].(model.ProjectInput)), true
+
+	case "Mutation.updateProjectEmployeeRole":
+		if e.complexity.Mutation.UpdateProjectEmployeeRole == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateProjectEmployeeRole_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateProjectEmployeeRole(childComplexity, args["input"].(model.ProjectEmployeeInput)), true
 
 	case "Mutation.updateTask":
 		if e.complexity.Mutation.UpdateTask == nil {
@@ -372,7 +512,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateTask(childComplexity, args["id"].(string), args["input"].(model.TaskInput)), true
+		return e.complexity.Mutation.UpdateTask(childComplexity, args["id"].(int), args["input"].(model.TaskInput)), true
 
 	case "Mutation.updateTeam":
 		if e.complexity.Mutation.UpdateTeam == nil {
@@ -384,7 +524,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateTeam(childComplexity, args["id"].(string), args["input"].(model.TeamInput)), true
+		return e.complexity.Mutation.UpdateTeam(childComplexity, args["id"].(int), args["input"].(model.TeamInput)), true
 
 	case "Mutation.updateTicket":
 		if e.complexity.Mutation.UpdateTicket == nil {
@@ -396,7 +536,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateTicket(childComplexity, args["id"].(string), args["input"].(model.TicketInput)), true
+		return e.complexity.Mutation.UpdateTicket(childComplexity, args["id"].(int), args["input"].(model.TicketInput)), true
 
 	case "Notification.createdAt":
 		if e.complexity.Notification.CreatedAt == nil {
@@ -405,12 +545,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Notification.CreatedAt(childComplexity), true
 
-	case "Notification.employee":
-		if e.complexity.Notification.Employee == nil {
+	case "Notification.employeeID":
+		if e.complexity.Notification.EmployeeID == nil {
 			break
 		}
 
-		return e.complexity.Notification.Employee(childComplexity), true
+		return e.complexity.Notification.EmployeeID(childComplexity), true
 
 	case "Notification.id":
 		if e.complexity.Notification.ID == nil {
@@ -433,6 +573,20 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Notification.Read(childComplexity), true
 
+	case "Notification.type":
+		if e.complexity.Notification.Type == nil {
+			break
+		}
+
+		return e.complexity.Notification.Type(childComplexity), true
+
+	case "Project.createdAt":
+		if e.complexity.Project.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.Project.CreatedAt(childComplexity), true
+
 	case "Project.description":
 		if e.complexity.Project.Description == nil {
 			break
@@ -447,12 +601,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Project.ID(childComplexity), true
 
-	case "Project.manager":
-		if e.complexity.Project.Manager == nil {
+	case "Project.managerID":
+		if e.complexity.Project.ManagerID == nil {
 			break
 		}
 
-		return e.complexity.Project.Manager(childComplexity), true
+		return e.complexity.Project.ManagerID(childComplexity), true
 
 	case "Project.name":
 		if e.complexity.Project.Name == nil {
@@ -475,19 +629,61 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Project.Status(childComplexity), true
 
-	case "Project.teams":
-		if e.complexity.Project.Teams == nil {
+	case "Project.updatedAt":
+		if e.complexity.Project.UpdatedAt == nil {
 			break
 		}
 
-		return e.complexity.Project.Teams(childComplexity), true
+		return e.complexity.Project.UpdatedAt(childComplexity), true
 
-	case "Project.tickets":
-		if e.complexity.Project.Tickets == nil {
+	case "ProjectEmployee.createdAt":
+		if e.complexity.ProjectEmployee.CreatedAt == nil {
 			break
 		}
 
-		return e.complexity.Project.Tickets(childComplexity), true
+		return e.complexity.ProjectEmployee.CreatedAt(childComplexity), true
+
+	case "ProjectEmployee.employeeID":
+		if e.complexity.ProjectEmployee.EmployeeID == nil {
+			break
+		}
+
+		return e.complexity.ProjectEmployee.EmployeeID(childComplexity), true
+
+	case "ProjectEmployee.projectID":
+		if e.complexity.ProjectEmployee.ProjectID == nil {
+			break
+		}
+
+		return e.complexity.ProjectEmployee.ProjectID(childComplexity), true
+
+	case "ProjectEmployee.role":
+		if e.complexity.ProjectEmployee.Role == nil {
+			break
+		}
+
+		return e.complexity.ProjectEmployee.Role(childComplexity), true
+
+	case "ProjectTeam.createdAt":
+		if e.complexity.ProjectTeam.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.ProjectTeam.CreatedAt(childComplexity), true
+
+	case "ProjectTeam.projectID":
+		if e.complexity.ProjectTeam.ProjectID == nil {
+			break
+		}
+
+		return e.complexity.ProjectTeam.ProjectID(childComplexity), true
+
+	case "ProjectTeam.teamID":
+		if e.complexity.ProjectTeam.TeamID == nil {
+			break
+		}
+
+		return e.complexity.ProjectTeam.TeamID(childComplexity), true
 
 	case "Query.employee":
 		if e.complexity.Query.Employee == nil {
@@ -499,7 +695,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.Employee(childComplexity, args["id"].(string)), true
+		return e.complexity.Query.Employee(childComplexity, args["id"].(int)), true
 
 	case "Query.employees":
 		if e.complexity.Query.Employees == nil {
@@ -507,6 +703,30 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Query.Employees(childComplexity), true
+
+	case "Query.employeesByProject":
+		if e.complexity.Query.EmployeesByProject == nil {
+			break
+		}
+
+		args, err := ec.field_Query_employeesByProject_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.EmployeesByProject(childComplexity, args["projectID"].(int)), true
+
+	case "Query.engineersByTeam":
+		if e.complexity.Query.EngineersByTeam == nil {
+			break
+		}
+
+		args, err := ec.field_Query_engineersByTeam_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.EngineersByTeam(childComplexity, args["teamID"].(int)), true
 
 	case "Query.notifications":
 		if e.complexity.Query.Notifications == nil {
@@ -518,7 +738,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.Notifications(childComplexity, args["employeeID"].(string)), true
+		return e.complexity.Query.Notifications(childComplexity, args["employeeID"].(int)), true
 
 	case "Query.project":
 		if e.complexity.Query.Project == nil {
@@ -530,7 +750,31 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.Project(childComplexity, args["id"].(string)), true
+		return e.complexity.Query.Project(childComplexity, args["id"].(int)), true
+
+	case "Query.projectEmployees":
+		if e.complexity.Query.ProjectEmployees == nil {
+			break
+		}
+
+		args, err := ec.field_Query_projectEmployees_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ProjectEmployees(childComplexity, args["projectID"].(int)), true
+
+	case "Query.projectTeams":
+		if e.complexity.Query.ProjectTeams == nil {
+			break
+		}
+
+		args, err := ec.field_Query_projectTeams_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ProjectTeams(childComplexity, args["projectID"].(int)), true
 
 	case "Query.projects":
 		if e.complexity.Query.Projects == nil {
@@ -561,7 +805,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.Task(childComplexity, args["id"].(string)), true
+		return e.complexity.Query.Task(childComplexity, args["id"].(int)), true
 
 	case "Query.tasks":
 		if e.complexity.Query.Tasks == nil {
@@ -580,7 +824,19 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.Team(childComplexity, args["id"].(string)), true
+		return e.complexity.Query.Team(childComplexity, args["id"].(int)), true
+
+	case "Query.teamEngineers":
+		if e.complexity.Query.TeamEngineers == nil {
+			break
+		}
+
+		args, err := ec.field_Query_teamEngineers_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.TeamEngineers(childComplexity, args["teamID"].(int)), true
 
 	case "Query.teams":
 		if e.complexity.Query.Teams == nil {
@@ -588,6 +844,18 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Query.Teams(childComplexity), true
+
+	case "Query.teamsByProject":
+		if e.complexity.Query.TeamsByProject == nil {
+			break
+		}
+
+		args, err := ec.field_Query_teamsByProject_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.TeamsByProject(childComplexity, args["projectID"].(int)), true
 
 	case "Query.ticket":
 		if e.complexity.Query.Ticket == nil {
@@ -599,7 +867,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.Ticket(childComplexity, args["id"].(string)), true
+		return e.complexity.Query.Ticket(childComplexity, args["id"].(int)), true
 
 	case "Query.tickets":
 		if e.complexity.Query.Tickets == nil {
@@ -608,12 +876,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Query.Tickets(childComplexity), true
 
-	case "Task.assignedTo":
-		if e.complexity.Task.AssignedTo == nil {
+	case "Task.assignedToID":
+		if e.complexity.Task.AssignedToID == nil {
 			break
 		}
 
-		return e.complexity.Task.AssignedTo(childComplexity), true
+		return e.complexity.Task.AssignedToID(childComplexity), true
 
 	case "Task.completedAt":
 		if e.complexity.Task.CompletedAt == nil {
@@ -650,6 +918,20 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Task.ID(childComplexity), true
 
+	case "Task.priority":
+		if e.complexity.Task.Priority == nil {
+			break
+		}
+
+		return e.complexity.Task.Priority(childComplexity), true
+
+	case "Task.projectID":
+		if e.complexity.Task.ProjectID == nil {
+			break
+		}
+
+		return e.complexity.Task.ProjectID(childComplexity), true
+
 	case "Task.status":
 		if e.complexity.Task.Status == nil {
 			break
@@ -664,12 +946,19 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Task.Title(childComplexity), true
 
-	case "Team.engineers":
-		if e.complexity.Team.Engineers == nil {
+	case "Team.createdAt":
+		if e.complexity.Team.CreatedAt == nil {
 			break
 		}
 
-		return e.complexity.Team.Engineers(childComplexity), true
+		return e.complexity.Team.CreatedAt(childComplexity), true
+
+	case "Team.description":
+		if e.complexity.Team.Description == nil {
+			break
+		}
+
+		return e.complexity.Team.Description(childComplexity), true
 
 	case "Team.id":
 		if e.complexity.Team.ID == nil {
@@ -678,12 +967,54 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Team.ID(childComplexity), true
 
-	case "Team.teamLeader":
-		if e.complexity.Team.TeamLeader == nil {
+	case "Team.name":
+		if e.complexity.Team.Name == nil {
 			break
 		}
 
-		return e.complexity.Team.TeamLeader(childComplexity), true
+		return e.complexity.Team.Name(childComplexity), true
+
+	case "Team.teamLeaderID":
+		if e.complexity.Team.TeamLeaderID == nil {
+			break
+		}
+
+		return e.complexity.Team.TeamLeaderID(childComplexity), true
+
+	case "Team.updatedAt":
+		if e.complexity.Team.UpdatedAt == nil {
+			break
+		}
+
+		return e.complexity.Team.UpdatedAt(childComplexity), true
+
+	case "TeamEngineer.createdAt":
+		if e.complexity.TeamEngineer.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.TeamEngineer.CreatedAt(childComplexity), true
+
+	case "TeamEngineer.engineerID":
+		if e.complexity.TeamEngineer.EngineerID == nil {
+			break
+		}
+
+		return e.complexity.TeamEngineer.EngineerID(childComplexity), true
+
+	case "TeamEngineer.teamID":
+		if e.complexity.TeamEngineer.TeamID == nil {
+			break
+		}
+
+		return e.complexity.TeamEngineer.TeamID(childComplexity), true
+
+	case "Ticket.assignedToID":
+		if e.complexity.Ticket.AssignedToID == nil {
+			break
+		}
+
+		return e.complexity.Ticket.AssignedToID(childComplexity), true
 
 	case "Ticket.completedAt":
 		if e.complexity.Ticket.CompletedAt == nil {
@@ -713,12 +1044,19 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Ticket.ID(childComplexity), true
 
-	case "Ticket.project":
-		if e.complexity.Ticket.Project == nil {
+	case "Ticket.priority":
+		if e.complexity.Ticket.Priority == nil {
 			break
 		}
 
-		return e.complexity.Ticket.Project(childComplexity), true
+		return e.complexity.Ticket.Priority(childComplexity), true
+
+	case "Ticket.projectID":
+		if e.complexity.Ticket.ProjectID == nil {
+			break
+		}
+
+		return e.complexity.Ticket.ProjectID(childComplexity), true
 
 	case "Ticket.status":
 		if e.complexity.Ticket.Status == nil {
@@ -744,8 +1082,11 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputEmployeeInput,
 		ec.unmarshalInputLoginDetailsInput,
+		ec.unmarshalInputProjectEmployeeInput,
 		ec.unmarshalInputProjectInput,
+		ec.unmarshalInputProjectTeamInput,
 		ec.unmarshalInputTaskInput,
+		ec.unmarshalInputTeamEngineerInput,
 		ec.unmarshalInputTeamInput,
 		ec.unmarshalInputTicketInput,
 	)
@@ -848,50 +1189,83 @@ var sources = []*ast.Source{
 	{Name: "../graphqls/mutations.graphqls", Input: `# ----------- Mutations -----------
 
 type Mutation {
-  addEmployee(input: EmployeeInput!): Employee!
-  updateEmployee(id: ID!, input: EmployeeInput!): Employee!
-  deleteEmployee(id: ID!): Boolean!  @auth(role: ADMIN)
+  # Employee operations
+  addEmployee(input: EmployeeInput!): Employee! @auth(role: ADMIN)
+  updateEmployee(id: Int!, input: EmployeeInput!): Employee!
+  deleteEmployee(id: Int!): Boolean!  @auth(role: ADMIN)
 
+  # Project operations
   addProject(input: ProjectInput!): Project!
-  updateProject(id: ID!, input: ProjectInput!): Project!
-  deleteProject(id: ID!): Boolean!
+  updateProject(id: Int!, input: ProjectInput!): Project!
+  deleteProject(id: Int!): Boolean!
 
+  # Team operations
   addTeam(input: TeamInput!): Team!
-  updateTeam(id: ID!, input: TeamInput!): Team!
-  deleteTeam(id: ID!): Boolean!
+  updateTeam(id: Int!, input: TeamInput!): Team!
+  deleteTeam(id: Int!): Boolean!
 
+  # Ticket operations
   addTicket(input: TicketInput!): Ticket!
-  updateTicket(id: ID!, input: TicketInput!): Ticket!
-  deleteTicket(id: ID!): Boolean!
+  updateTicket(id: Int!, input: TicketInput!): Ticket!
+  deleteTicket(id: Int!): Boolean!
 
+  # Task operations
   addTask(input: TaskInput!): Task!
-  updateTask(id: ID!, input: TaskInput!): Task!
-  deleteTask(id: ID!): Boolean!
+  updateTask(id: Int!, input: TaskInput!): Task!
+  deleteTask(id: Int!): Boolean!
 
-  addNotification(message: String!, employeeID: ID!): Notification!
-  markNotificationRead(id: ID!): Boolean!
+  # Notification operations
+  addNotification(message: String!, employeeID: Int!, type: NotificationType): Notification!
+  markNotificationRead(id: Int!): Boolean!
+
+  # Junction table operations
+  addTeamEngineer(input: TeamEngineerInput!): TeamEngineer!
+  removeTeamEngineer(input: TeamEngineerInput!): Boolean!
+  
+  addProjectTeam(input: ProjectTeamInput!): ProjectTeam!
+  removeProjectTeam(input: ProjectTeamInput!): Boolean!
+  
+  addProjectEmployee(input: ProjectEmployeeInput!): ProjectEmployee!
+  removeProjectEmployee(input: ProjectEmployeeInput!): Boolean!
+  updateProjectEmployeeRole(input: ProjectEmployeeInput!): ProjectEmployee!
 }
 `, BuiltIn: false},
 	{Name: "../graphqls/query.graphqls", Input: `# ----------- Queries -----------
 
 type Query {
+  # Employee queries
   employees: [Employee!]!
-  employee(id: ID!): Employee
-  signIn(email:String!,password:String!):Boolean!
+  employee(id: Int!): Employee
+  signIn(email: String!, password: String!): Boolean!
 
+  # Project queries
   projects: [Project!]!
-  project(id: ID!): Project
+  project(id: Int!): Project
 
+  # Task queries
   tasks: [Task!]!
-  task(id: ID!): Task
+  task(id: Int!): Task
 
+  # Ticket queries
   tickets: [Ticket!]!
-  ticket(id: ID!): Ticket
+  ticket(id: Int!): Ticket
 
+  # Team queries
   teams: [Team!]!
-  team(id: ID!): Team
+  team(id: Int!): Team
 
-  notifications(employeeID: ID!): [Notification!]!
+  # Notification queries
+  notifications(employeeID: Int!): [Notification!]!
+
+  # Junction table queries
+  teamEngineers(teamID: Int!): [TeamEngineer!]!
+  projectTeams(projectID: Int!): [ProjectTeam!]!
+  projectEmployees(projectID: Int!): [ProjectEmployee!]!
+  
+  # Relationship queries
+  employeesByProject(projectID: Int!): [Employee!]!
+  teamsByProject(projectID: Int!): [Team!]!
+  engineersByTeam(teamID: Int!): [Employee!]!
 }`, BuiltIn: false},
 	{Name: "../graphqls/types.graphqls", Input: `# ----------- Scalars -----------
 scalar Date
@@ -905,10 +1279,6 @@ enum Role {
   MANAGER
 }
 
-# ---------- Directive -----------
-
-directive @auth(role: Role!) on FIELD_DEFINITION
-
 enum Status {
   NOT_STARTED
   IN_PROGRESS
@@ -917,61 +1287,107 @@ enum Status {
   CANCELLED
 }
 
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum NotificationType {
+  INFO
+  WARNING
+  ERROR
+  SUCCESS
+}
+
+# ---------- Directive -----------
+directive @auth(role: Role!) on FIELD_DEFINITION
+
 # ----------- Types -----------
 
 type Employee {
-  id: ID!
+  id: Int!
   name: String!
-  email:String!
+  email: String!
   role: Role!
   active: Boolean!
-  project_assigned: Project
+  projectAssignedID: Int
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Project {
-  id: ID!
-  manager: Employee
-  teams: [Team!]
+  id: Int!
+  managerID: Int
   name: String!
   status: Status!
-  tickets: [Ticket!]
   description: String
   startDate: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Team {
-  id: ID!
-  teamLeader: Employee
-  engineers: [Employee!]
+  id: Int!
+  teamLeaderID: Int
+  name: String!
+  description: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Ticket {
-  id: ID!
+  id: Int!
+  projectID: Int!
+  assignedToID: Int
   status: Status!
   title: String!
   description: String
+  priority: Priority!
   createdAt: DateTime!
   completedAt: DateTime
-  project: Project!
 }
 
 type Task {
-  id: ID!
+  id: Int!
   title: String!
   description: String
-  assignedTo: Employee!
+  assignedToID: Int
+  projectID: Int
   dueDate: Date
   status: Status!
+  priority: Priority!
   createdAt: DateTime!
   completedAt: DateTime
 }
 
 type Notification {
-  id: ID!
+  id: Int!
   message: String!
-  employee: Employee!
+  employeeID: Int!
+  type: NotificationType!
   createdAt: DateTime!
   read: Boolean!
+}
+
+type TeamEngineer {
+  teamID: Int!
+  engineerID: Int!
+  createdAt: DateTime!
+}
+
+type ProjectTeam {
+  projectID: Int!
+  teamID: Int!
+  createdAt: DateTime!
+}
+
+type ProjectEmployee {
+  projectID: Int!
+  employeeID: Int!
+  role: String!
+  createdAt: DateTime!
 }
 
 # ----------- Inputs -----------
@@ -984,37 +1400,59 @@ input LoginDetailsInput {
 input EmployeeInput {
   name: String!
   role: Role!
-  email:String!
-  password:String
-  projectID: ID
+  email: String!
+  password: String!
+  projectID: Int
 }
 
 input ProjectInput {
   name: String!
-  managerID: ID
-  teamIDs: [ID!]
+  managerID: Int
+  teamIDs: [Int!]
   status: Status
   description: String
 }
 
 input TeamInput {
-  teamLeaderID: ID!
-  engineerIDs: [ID!]!
+  name: String!
+  teamLeaderID: Int
+  description: String
+  engineerIDs: [Int!]
 }
 
 input TicketInput {
   title: String!
   description: String
-  projectID: ID!
+  projectID: Int!
+  assignedToID: Int
   status: Status!
+  priority: Priority
 }
 
 input TaskInput {
   title: String!
   description: String
-  assignedToID: ID
+  assignedToID: Int
+  projectID: Int
   dueDate: Date
   status: Status!
+  priority: Priority
+}
+
+input TeamEngineerInput {
+  teamID: Int!
+  engineerID: Int!
+}
+
+input ProjectTeamInput {
+  projectID: Int!
+  teamID: Int!
+}
+
+input ProjectEmployeeInput {
+  projectID: Int!
+  employeeID: Int!
+  role: String!
 }
 `, BuiltIn: false},
 }

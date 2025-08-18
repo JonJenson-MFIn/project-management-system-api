@@ -10,10 +10,6 @@ enum Role {
   MANAGER
 }
 
-# ---------- Directive -----------
-
-directive @auth(role: Role!) on FIELD_DEFINITION
-
 enum Status {
   NOT_STARTED
   IN_PROGRESS
@@ -22,102 +18,16 @@ enum Status {
   CANCELLED
 }
 
-# ----------- Types -----------
-
-type Employee {
-  id: ID!
-  name: String!
-  email:String!
-  role: Role!
-  active: Boolean!
-  project_assigned: Project
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
 }
 
-type Project {
-  id: ID!
-  manager: Employee
-  teams: [Team!]
-  name: String!
-  status: Status!
-  tickets: [Ticket!]
-  description: String
-  startDate: DateTime!
-}
-
-type Team {
-  id: ID!
-  teamLeader: Employee
-  engineers: [Employee!]
-}
-
-type Ticket {
-  id: ID!
-  status: Status!
-  title: String!
-  description: String
-  createdAt: DateTime!
-  completedAt: DateTime
-  project: Project!
-}
-
-type Task {
-  id: ID!
-  title: String!
-  description: String
-  assignedTo: Employee!
-  dueDate: Date
-  status: Status!
-  createdAt: DateTime!
-  completedAt: DateTime
-}
-
-type Notification {
-  id: ID!
-  message: String!
-  employee: Employee!
-  createdAt: DateTime!
-  read: Boolean!
-}
-
-# ----------- Inputs -----------
-
-input LoginDetailsInput {
-  username: String!
-  password: String!
-}
-
-input EmployeeInput {
-  name: String!
-  role: Role!
-  email:String!
-  password:String
-  projectID: ID
-}
-
-input ProjectInput {
-  name: String!
-  managerID: ID
-  teamIDs: [ID!]
-  status: Status
-  description: String
-}
-
-input TeamInput {
-  teamLeaderID: ID!
-  engineerIDs: [ID!]!
-}
-
-input TicketInput {
-  title: String!
-  description: String
-  projectID: ID!
-  status: Status!
-}
-
-input TaskInput {
-  title: String!
-  description: String
-  assignedToID: ID
-  dueDate: Date
-  status: Status!
+enum NotificationType {
+  INFO
+  WARNING
+  ERROR
+  SUCCESS
 }

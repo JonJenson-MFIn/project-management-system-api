@@ -1,26 +1,43 @@
 # ----------- Mutations -----------
 
 type Mutation {
-  addEmployee(input: EmployeeInput!): Employee!
-  updateEmployee(id: ID!, input: EmployeeInput!): Employee!
-  deleteEmployee(id: ID!): Boolean!  @auth(role: ADMIN)
+  # Employee operations
+  addEmployee(input: EmployeeInput!): Employee! @auth(role: ADMIN)
+  updateEmployee(id: Int!, input: EmployeeInput!): Employee!
+  deleteEmployee(id: Int!): Boolean!  @auth(role: ADMIN)
 
+  # Project operations
   addProject(input: ProjectInput!): Project!
-  updateProject(id: ID!, input: ProjectInput!): Project!
-  deleteProject(id: ID!): Boolean!
+  updateProject(id: Int!, input: ProjectInput!): Project!
+  deleteProject(id: Int!): Boolean!
 
+  # Team operations
   addTeam(input: TeamInput!): Team!
-  updateTeam(id: ID!, input: TeamInput!): Team!
-  deleteTeam(id: ID!): Boolean!
+  updateTeam(id: Int!, input: TeamInput!): Team!
+  deleteTeam(id: Int!): Boolean!
 
+  # Ticket operations
   addTicket(input: TicketInput!): Ticket!
-  updateTicket(id: ID!, input: TicketInput!): Ticket!
-  deleteTicket(id: ID!): Boolean!
+  updateTicket(id: Int!, input: TicketInput!): Ticket!
+  deleteTicket(id: Int!): Boolean!
 
+  # Task operations
   addTask(input: TaskInput!): Task!
-  updateTask(id: ID!, input: TaskInput!): Task!
-  deleteTask(id: ID!): Boolean!
+  updateTask(id: Int!, input: TaskInput!): Task!
+  deleteTask(id: Int!): Boolean!
 
-  addNotification(message: String!, employeeID: ID!): Notification!
-  markNotificationRead(id: ID!): Boolean!
+  # Notification operations
+  addNotification(message: String!, employeeID: Int!, type: NotificationType): Notification!
+  markNotificationRead(id: Int!): Boolean!
+
+  # Junction table operations
+  addTeamEngineer(input: TeamEngineerInput!): TeamEngineer!
+  removeTeamEngineer(input: TeamEngineerInput!): Boolean!
+  
+  addProjectTeam(input: ProjectTeamInput!): ProjectTeam!
+  removeProjectTeam(input: ProjectTeamInput!): Boolean!
+  
+  addProjectEmployee(input: ProjectEmployeeInput!): ProjectEmployee!
+  removeProjectEmployee(input: ProjectEmployeeInput!): Boolean!
+  updateProjectEmployeeRole(input: ProjectEmployeeInput!): ProjectEmployee!
 }

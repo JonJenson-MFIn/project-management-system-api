@@ -11,20 +11,22 @@ import (
 )
 
 type Employee struct {
-	ID              string   `json:"id"`
-	Name            string   `json:"name"`
-	Email           string   `json:"email"`
-	Role            Role     `json:"role"`
-	Active          bool     `json:"active"`
-	ProjectAssigned *Project `json:"project_assigned,omitempty"`
+	ID                int       `json:"id"`
+	Name              string    `json:"name"`
+	Email             string    `json:"email"`
+	Role              Role      `json:"role"`
+	Active            bool      `json:"active"`
+	ProjectAssignedID *int      `json:"projectAssignedID,omitempty"`
+	CreatedAt         time.Time `json:"createdAt"`
+	UpdatedAt         time.Time `json:"updatedAt"`
 }
 
 type EmployeeInput struct {
-	Name      string  `json:"name"`
-	Role      Role    `json:"role"`
-	Email     string  `json:"email"`
-	Password  *string `json:"password,omitempty"`
-	ProjectID *string `json:"projectID,omitempty"`
+	Name      string `json:"name"`
+	Role      Role   `json:"role"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	ProjectID *int   `json:"projectID,omitempty"`
 }
 
 type LoginDetailsInput struct {
@@ -36,80 +38,247 @@ type Mutation struct {
 }
 
 type Notification struct {
-	ID        string    `json:"id"`
-	Message   string    `json:"message"`
-	Employee  *Employee `json:"employee"`
-	CreatedAt time.Time `json:"createdAt"`
-	Read      bool      `json:"read"`
+	ID         int              `json:"id"`
+	Message    string           `json:"message"`
+	EmployeeID int              `json:"employeeID"`
+	Type       NotificationType `json:"type"`
+	CreatedAt  time.Time        `json:"createdAt"`
+	Read       bool             `json:"read"`
 }
 
 type Project struct {
-	ID          string    `json:"id"`
-	Manager     *Employee `json:"manager,omitempty"`
-	Teams       []*Team   `json:"teams,omitempty"`
+	ID          int       `json:"id"`
+	ManagerID   *int      `json:"managerID,omitempty"`
 	Name        string    `json:"name"`
 	Status      Status    `json:"status"`
-	Tickets     []*Ticket `json:"tickets,omitempty"`
 	Description *string   `json:"description,omitempty"`
 	StartDate   time.Time `json:"startDate"`
+	CreatedAt   time.Time `json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
+}
+
+type ProjectEmployee struct {
+	ProjectID  int       `json:"projectID"`
+	EmployeeID int       `json:"employeeID"`
+	Role       string    `json:"role"`
+	CreatedAt  time.Time `json:"createdAt"`
+}
+
+type ProjectEmployeeInput struct {
+	ProjectID  int    `json:"projectID"`
+	EmployeeID int    `json:"employeeID"`
+	Role       string `json:"role"`
 }
 
 type ProjectInput struct {
-	Name        string   `json:"name"`
-	ManagerID   *string  `json:"managerID,omitempty"`
-	TeamIDs     []string `json:"teamIDs,omitempty"`
-	Status      *Status  `json:"status,omitempty"`
-	Description *string  `json:"description,omitempty"`
+	Name        string  `json:"name"`
+	ManagerID   *int    `json:"managerID,omitempty"`
+	TeamIDs     []int   `json:"teamIDs,omitempty"`
+	Status      *Status `json:"status,omitempty"`
+	Description *string `json:"description,omitempty"`
+}
+
+type ProjectTeam struct {
+	ProjectID int       `json:"projectID"`
+	TeamID    int       `json:"teamID"`
+	CreatedAt time.Time `json:"createdAt"`
+}
+
+type ProjectTeamInput struct {
+	ProjectID int `json:"projectID"`
+	TeamID    int `json:"teamID"`
 }
 
 type Query struct {
 }
 
 type Task struct {
-	ID          string     `json:"id"`
-	Title       string     `json:"title"`
-	Description *string    `json:"description,omitempty"`
-	AssignedTo  *Employee  `json:"assignedTo"`
-	DueDate     *string    `json:"dueDate,omitempty"`
-	Status      Status     `json:"status"`
-	CreatedAt   time.Time  `json:"createdAt"`
-	CompletedAt *time.Time `json:"completedAt,omitempty"`
+	ID           int        `json:"id"`
+	Title        string     `json:"title"`
+	Description  *string    `json:"description,omitempty"`
+	AssignedToID *int       `json:"assignedToID,omitempty"`
+	ProjectID    *int       `json:"projectID,omitempty"`
+	DueDate      *string    `json:"dueDate,omitempty"`
+	Status       Status     `json:"status"`
+	Priority     Priority   `json:"priority"`
+	CreatedAt    time.Time  `json:"createdAt"`
+	CompletedAt  *time.Time `json:"completedAt,omitempty"`
 }
 
 type TaskInput struct {
-	Title        string  `json:"title"`
-	Description  *string `json:"description,omitempty"`
-	AssignedToID *string `json:"assignedToID,omitempty"`
-	DueDate      *string `json:"dueDate,omitempty"`
-	Status       Status  `json:"status"`
+	Title        string    `json:"title"`
+	Description  *string   `json:"description,omitempty"`
+	AssignedToID *int      `json:"assignedToID,omitempty"`
+	ProjectID    *int      `json:"projectID,omitempty"`
+	DueDate      *string   `json:"dueDate,omitempty"`
+	Status       Status    `json:"status"`
+	Priority     *Priority `json:"priority,omitempty"`
 }
 
 type Team struct {
-	ID         string      `json:"id"`
-	TeamLeader *Employee   `json:"teamLeader,omitempty"`
-	Engineers  []*Employee `json:"engineers,omitempty"`
+	ID           int       `json:"id"`
+	TeamLeaderID *int      `json:"teamLeaderID,omitempty"`
+	Name         string    `json:"name"`
+	Description  *string   `json:"description,omitempty"`
+	CreatedAt    time.Time `json:"createdAt"`
+	UpdatedAt    time.Time `json:"updatedAt"`
+}
+
+type TeamEngineer struct {
+	TeamID     int       `json:"teamID"`
+	EngineerID int       `json:"engineerID"`
+	CreatedAt  time.Time `json:"createdAt"`
+}
+
+type TeamEngineerInput struct {
+	TeamID     int `json:"teamID"`
+	EngineerID int `json:"engineerID"`
 }
 
 type TeamInput struct {
-	TeamLeaderID string   `json:"teamLeaderID"`
-	EngineerIDs  []string `json:"engineerIDs"`
+	Name         string  `json:"name"`
+	TeamLeaderID *int    `json:"teamLeaderID,omitempty"`
+	Description  *string `json:"description,omitempty"`
+	EngineerIDs  []int   `json:"engineerIDs,omitempty"`
 }
 
 type Ticket struct {
-	ID          string     `json:"id"`
-	Status      Status     `json:"status"`
-	Title       string     `json:"title"`
-	Description *string    `json:"description,omitempty"`
-	CreatedAt   time.Time  `json:"createdAt"`
-	CompletedAt *time.Time `json:"completedAt,omitempty"`
-	Project     *Project   `json:"project"`
+	ID           int        `json:"id"`
+	ProjectID    int        `json:"projectID"`
+	AssignedToID *int       `json:"assignedToID,omitempty"`
+	Status       Status     `json:"status"`
+	Title        string     `json:"title"`
+	Description  *string    `json:"description,omitempty"`
+	Priority     Priority   `json:"priority"`
+	CreatedAt    time.Time  `json:"createdAt"`
+	CompletedAt  *time.Time `json:"completedAt,omitempty"`
 }
 
 type TicketInput struct {
-	Title       string  `json:"title"`
-	Description *string `json:"description,omitempty"`
-	ProjectID   string  `json:"projectID"`
-	Status      Status  `json:"status"`
+	Title        string    `json:"title"`
+	Description  *string   `json:"description,omitempty"`
+	ProjectID    int       `json:"projectID"`
+	AssignedToID *int      `json:"assignedToID,omitempty"`
+	Status       Status    `json:"status"`
+	Priority     *Priority `json:"priority,omitempty"`
+}
+
+type NotificationType string
+
+const (
+	NotificationTypeInfo    NotificationType = "INFO"
+	NotificationTypeWarning NotificationType = "WARNING"
+	NotificationTypeError   NotificationType = "ERROR"
+	NotificationTypeSuccess NotificationType = "SUCCESS"
+)
+
+var AllNotificationType = []NotificationType{
+	NotificationTypeInfo,
+	NotificationTypeWarning,
+	NotificationTypeError,
+	NotificationTypeSuccess,
+}
+
+func (e NotificationType) IsValid() bool {
+	switch e {
+	case NotificationTypeInfo, NotificationTypeWarning, NotificationTypeError, NotificationTypeSuccess:
+		return true
+	}
+	return false
+}
+
+func (e NotificationType) String() string {
+	return string(e)
+}
+
+func (e *NotificationType) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = NotificationType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid NotificationType", str)
+	}
+	return nil
+}
+
+func (e NotificationType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *NotificationType) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e NotificationType) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
+}
+
+type Priority string
+
+const (
+	PriorityLow    Priority = "LOW"
+	PriorityMedium Priority = "MEDIUM"
+	PriorityHigh   Priority = "HIGH"
+	PriorityUrgent Priority = "URGENT"
+)
+
+var AllPriority = []Priority{
+	PriorityLow,
+	PriorityMedium,
+	PriorityHigh,
+	PriorityUrgent,
+}
+
+func (e Priority) IsValid() bool {
+	switch e {
+	case PriorityLow, PriorityMedium, PriorityHigh, PriorityUrgent:
+		return true
+	}
+	return false
+}
+
+func (e Priority) String() string {
+	return string(e)
+}
+
+func (e *Priority) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Priority(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Priority", str)
+	}
+	return nil
+}
+
+func (e Priority) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *Priority) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e Priority) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
 }
 
 type Role string

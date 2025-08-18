@@ -22,81 +22,93 @@ const (
 )
 
 type Employee struct {
-	ID                string         `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
+	ID                int            `gorm:"primaryKey;autoIncrement" json:"id"`
 	Name              string         `gorm:"not null" json:"name"`
 	Email             string         `gorm:"uniqueIndex;not null" json:"email"`
 	Password          string         `json:"-"`
 	Role              RoleDB         `gorm:"type:varchar(20);not null" json:"role"`
 	Active            bool           `gorm:"not null;default:true" json:"active"`
-	ProjectAssignedID *string        `gorm:"type:uuid;index" json:"project_assigned_id,omitempty"`
-	// ProjectAssigned   *Project       `gorm:"foreignKey:ProjectAssignedID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"project_assigned,omitempty"`
-	// Teams             []*Team        `gorm:"many2many:team_engineers;" json:"teams,omitempty"`
+	ProjectAssignedID *int           `gorm:"index" json:"project_assigned_id,omitempty"`
 	CreatedAt         time.Time      `gorm:"autoCreateTime" json:"createdAt"`
 	UpdatedAt         time.Time      `gorm:"autoUpdateTime" json:"updatedAt"`
 	DeletedAt         gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
 type Team struct {
-	ID           string         `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
-	TeamLeaderID *string        `gorm:"type:uuid;index" json:"team_leader_id,omitempty"`
-	TeamLeader   *Employee      `gorm:"foreignKey:TeamLeaderID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"team_leader,omitempty"`
-	Engineers    []*Employee    `gorm:"many2many:team_engineers;" json:"engineers,omitempty"`
-	// Projects     []*Project     `gorm:"many2many:project_teams;" json:"projects,omitempty"`
+	ID           int            `gorm:"primaryKey;autoIncrement" json:"id"`
+	TeamLeaderID *int           `gorm:"index" json:"team_leader_id,omitempty"`
+	Name         string         `gorm:"not null" json:"name"`
+	Description  *string        `json:"description,omitempty"`
 	CreatedAt    time.Time      `gorm:"autoCreateTime" json:"createdAt"`
 	UpdatedAt    time.Time      `gorm:"autoUpdateTime" json:"updatedAt"`
 	DeletedAt    gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
-
 type Project struct {
-	ID          string         `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
-	ManagerID   *string        `gorm:"type:uuid;index" json:"manager_id,omitempty"`
-	Manager     *Employee      `gorm:"foreignKey:ManagerID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"manager,omitempty"`
+	ID          int            `gorm:"primaryKey;autoIncrement" json:"id"`
+	ManagerID   *int           `gorm:"index" json:"manager_id,omitempty"`
 	Name        string         `gorm:"not null" json:"name"`
 	Status      StatusDB       `gorm:"type:varchar(20);not null" json:"status"`
 	Description *string        `json:"description,omitempty"`
 	StartDate   time.Time      `json:"start_date"`
-	Teams       []*Team        `gorm:"many2many:project_teams;" json:"teams,omitempty"`
-	Tickets     []*Ticket      `gorm:"foreignKey:ProjectID" json:"tickets,omitempty"`
 	CreatedAt   time.Time      `gorm:"autoCreateTime" json:"createdAt"`
 	UpdatedAt   time.Time      `gorm:"autoUpdateTime" json:"updatedAt"`
 	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
-
 type Ticket struct {
-	ID          string         `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
-	ProjectID   string         `gorm:"type:uuid;not null;index" json:"project_id"`
-	Project     *Project       `gorm:"foreignKey:ProjectID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"project,omitempty"`
-	Status      StatusDB       `gorm:"type:varchar(20);not null" json:"status"`
-	Title       string         `gorm:"not null" json:"title"`
-	Description *string        `json:"description,omitempty"`
-	CreatedAt   time.Time      `gorm:"autoCreateTime" json:"createdAt"`
-	CompletedAt *time.Time     `json:"completedAt,omitempty"`
-	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
+	ID           int            `gorm:"primaryKey;autoIncrement" json:"id"`
+	ProjectID    int            `gorm:"not null;index" json:"project_id"`
+	AssignedToID *int           `gorm:"index" json:"assigned_to_id,omitempty"`
+	Status       StatusDB       `gorm:"type:varchar(20);not null" json:"status"`
+	Title        string         `gorm:"not null" json:"title"`
+	Description  *string        `json:"description,omitempty"`
+	Priority     string         `gorm:"type:varchar(20);default:'MEDIUM'" json:"priority"`
+	CreatedAt    time.Time      `gorm:"autoCreateTime" json:"createdAt"`
+	CompletedAt  *time.Time     `json:"completedAt,omitempty"`
+	DeletedAt    gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
 type Task struct {
-	ID           string         `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
+	ID           int            `gorm:"primaryKey;autoIncrement" json:"id"`
 	Title        string         `gorm:"not null" json:"title"`
 	Description  *string        `json:"description,omitempty"`
-	AssignedToID *string        `gorm:"type:uuid;index" json:"assigned_to_id,omitempty"`
-	AssignedTo   *Employee      `gorm:"foreignKey:AssignedToID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"assigned_to,omitempty"`
+	AssignedToID *int           `gorm:"index" json:"assigned_to_id,omitempty"`
+	ProjectID    *int           `gorm:"index" json:"project_id,omitempty"`
 	DueDate      *time.Time     `json:"due_date,omitempty"`
 	Status       StatusDB       `gorm:"type:varchar(20);not null" json:"status"`
+	Priority     string         `gorm:"type:varchar(20);default:'MEDIUM'" json:"priority"`
 	CreatedAt    time.Time      `gorm:"autoCreateTime" json:"createdAt"`
 	CompletedAt  *time.Time     `json:"completedAt,omitempty"`
 	DeletedAt    gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
 type Notification struct {
-	ID         string         `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
+	ID         int            `gorm:"primaryKey;autoIncrement" json:"id"`
 	Message    string         `gorm:"not null" json:"message"`
-	EmployeeID string         `gorm:"type:uuid;index" json:"employee_id"`
-	Employee   *Employee      `gorm:"foreignKey:EmployeeID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"employee,omitempty"`
+	EmployeeID int            `gorm:"index" json:"employee_id"`
+	Type       string         `gorm:"type:varchar(50);default:'INFO'" json:"type"`
 	CreatedAt  time.Time      `gorm:"autoCreateTime" json:"createdAt"`
 	Read       bool           `gorm:"not null;default:false" json:"read"`
 	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
+// Junction tables for many-to-many relationships
+type TeamEngineer struct {
+	TeamID     int       `gorm:"primaryKey" json:"team_id"`
+	EngineerID int       `gorm:"primaryKey" json:"engineer_id"`
+	CreatedAt  time.Time `gorm:"autoCreateTime" json:"createdAt"`
+}
 
+type ProjectTeam struct {
+	ProjectID int       `gorm:"primaryKey" json:"project_id"`
+	TeamID    int       `gorm:"primaryKey" json:"team_id"`
+	CreatedAt time.Time `gorm:"autoCreateTime" json:"createdAt"`
+}
+
+type ProjectEmployee struct {
+	ProjectID  int       `gorm:"primaryKey" json:"project_id"`
+	EmployeeID int       `gorm:"primaryKey" json:"employee_id"`
+	Role       string    `gorm:"type:varchar(50);default:'MEMBER'" json:"role"`
+	CreatedAt  time.Time `gorm:"autoCreateTime" json:"createdAt"`
+}

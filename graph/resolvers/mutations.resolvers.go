@@ -14,11 +14,12 @@ import (
 	"github.com/JonJenson-MFIn/project-management-system-api/graph/model"
 )
 
+// AddEmployee is the resolver for the addEmployee field.
 func (r *mutationResolver) AddEmployee(ctx context.Context, input model.EmployeeInput) (*model.Employee, error) {
 	newEmployee := db.Employee{
 		Name:              input.Name,
 		Email:             input.Email,
-		Password:          *input.Password,
+		Password:          input.Password,
 		Role:              db.RoleToDB(input.Role),
 		Active:            true,
 		ProjectAssignedID: input.ProjectID,
@@ -29,28 +30,33 @@ func (r *mutationResolver) AddEmployee(ctx context.Context, input model.Employee
 	}
 
 	return &model.Employee{
-		ID:     newEmployee.ID,
-		Name:   newEmployee.Name,
-		Email:  newEmployee.Email,
-		Role:   model.Role(newEmployee.Role),
-		Active: newEmployee.Active,
+		ID:                newEmployee.ID,
+		Name:              newEmployee.Name,
+		Email:             newEmployee.Email,
+		Role:              db.RoleToModel(newEmployee.Role),
+		Active:            newEmployee.Active,
+		ProjectAssignedID: newEmployee.ProjectAssignedID,
+		CreatedAt:         newEmployee.CreatedAt,
+		UpdatedAt:         newEmployee.UpdatedAt,
 	}, nil
 }
 
 // UpdateEmployee is the resolver for the updateEmployee field.
-func (r *mutationResolver) UpdateEmployee(ctx context.Context, id string, input model.EmployeeInput) (*model.Employee, error) {
+func (r *mutationResolver) UpdateEmployee(ctx context.Context, id int, input model.EmployeeInput) (*model.Employee, error) {
 	var employee db.Employee
 	if err := r.DB.Where("id = ?", id).First(&employee).Error; err != nil {
 		return nil, fmt.Errorf("employee not found: %w", err)
-	}	// Update fields if provided
+	}
+
+	// Update fields if provided
 	if input.Name != "" {
 		employee.Name = input.Name
 	}
 	if input.Email != "" {
 		employee.Email = input.Email
 	}
-	if input.Password != nil {
-		employee.Password = *input.Password
+	if input.Password != "" {
+		employee.Password = input.Password
 	}
 	if input.Role != "" {
 		employee.Role = db.RoleToDB(input.Role)
@@ -64,16 +70,19 @@ func (r *mutationResolver) UpdateEmployee(ctx context.Context, id string, input 
 	}
 
 	return &model.Employee{
-		ID:     employee.ID,
-		Name:   employee.Name,
-		Email:  employee.Email,
-		Role:   db.RoleToModel(employee.Role),
-		Active: employee.Active,
+		ID:                employee.ID,
+		Name:              employee.Name,
+		Email:             employee.Email,
+		Role:              db.RoleToModel(employee.Role),
+		Active:            employee.Active,
+		ProjectAssignedID: employee.ProjectAssignedID,
+		CreatedAt:         employee.CreatedAt,
+		UpdatedAt:         employee.UpdatedAt,
 	}, nil
 }
 
 // DeleteEmployee is the resolver for the deleteEmployee field.
-func (r *mutationResolver) DeleteEmployee(ctx context.Context, id string) (bool, error) {
+func (r *mutationResolver) DeleteEmployee(ctx context.Context, id int) (bool, error) {
 	var employee db.Employee
 	if err := r.DB.Where("id = ?", id).First(&employee).Error; err != nil {
 		return false, fmt.Errorf("employee not found: %w", err)
@@ -105,31 +114,25 @@ func (r *mutationResolver) AddProject(ctx context.Context, input model.ProjectIn
 		return nil, fmt.Errorf("failed to create project: %w", err)
 	}
 
-	if len(input.TeamIDs) > 0 {
-		var teams []db.Team
-		if err := r.DB.Where("id IN ?", input.TeamIDs).Find(&teams).Error; err != nil {
-			return nil, fmt.Errorf("failed to find teams: %w", err)
-		}
-		if err := r.DB.Model(&newProject).Association("Teams").Append(teams); err != nil {
-			return nil, fmt.Errorf("failed to associate teams: %w", err)
-		}
-	}
-
 	return &model.Project{
 		ID:          newProject.ID,
+		ManagerID:   newProject.ManagerID,
 		Name:        newProject.Name,
 		Status:      db.StatusToModel(newProject.Status),
 		Description: newProject.Description,
 		StartDate:   newProject.StartDate,
+		CreatedAt:   newProject.CreatedAt,
+		UpdatedAt:   newProject.UpdatedAt,
 	}, nil
 }
 
 // UpdateProject is the resolver for the updateProject field.
-func (r *mutationResolver) UpdateProject(ctx context.Context, id string, input model.ProjectInput) (*model.Project, error) {
+func (r *mutationResolver) UpdateProject(ctx context.Context, id int, input model.ProjectInput) (*model.Project, error) {
 	var project db.Project
 	if err := r.DB.Where("id = ?", id).First(&project).Error; err != nil {
 		return nil, fmt.Errorf("project not found: %w", err)
 	}
+
 	if input.Name != "" {
 		project.Name = input.Name
 	}
@@ -147,33 +150,20 @@ func (r *mutationResolver) UpdateProject(ctx context.Context, id string, input m
 		return nil, fmt.Errorf("failed to update project: %w", err)
 	}
 
-	if input.TeamIDs != nil {
-		if err := r.DB.Model(&project).Association("Teams").Clear(); err != nil {
-			return nil, fmt.Errorf("failed to clear team associations: %w", err)
-		}
-
-		if len(input.TeamIDs) > 0 {
-			var teams []db.Team
-			if err := r.DB.Where("id IN ?", input.TeamIDs).Find(&teams).Error; err != nil {
-				return nil, fmt.Errorf("failed to find teams: %w", err)
-			}
-			if err := r.DB.Model(&project).Association("Teams").Append(teams); err != nil {
-				return nil, fmt.Errorf("failed to associate teams: %w", err)
-			}
-		}
-	}
-
 	return &model.Project{
 		ID:          project.ID,
+		ManagerID:   project.ManagerID,
 		Name:        project.Name,
 		Status:      db.StatusToModel(project.Status),
 		Description: project.Description,
 		StartDate:   project.StartDate,
+		CreatedAt:   project.CreatedAt,
+		UpdatedAt:   project.UpdatedAt,
 	}, nil
 }
 
 // DeleteProject is the resolver for the deleteProject field.
-func (r *mutationResolver) DeleteProject(ctx context.Context, id string) (bool, error) {
+func (r *mutationResolver) DeleteProject(ctx context.Context, id int) (bool, error) {
 	var project db.Project
 	if err := r.DB.Where("id = ?", id).First(&project).Error; err != nil {
 		return false, fmt.Errorf("project not found: %w", err)
@@ -189,73 +179,58 @@ func (r *mutationResolver) DeleteProject(ctx context.Context, id string) (bool, 
 // AddTeam is the resolver for the addTeam field.
 func (r *mutationResolver) AddTeam(ctx context.Context, input model.TeamInput) (*model.Team, error) {
 	newTeam := db.Team{
-		TeamLeaderID: &input.TeamLeaderID,
+		Name:         input.Name,
+		TeamLeaderID: input.TeamLeaderID,
+		Description:  input.Description,
 	}
 
 	if err := r.DB.Create(&newTeam).Error; err != nil {
 		return nil, fmt.Errorf("failed to create team: %w", err)
 	}
 
-	if len(input.EngineerIDs) > 0 {
-		var engineers []db.Employee
-		if err := r.DB.Where("id IN ?", input.EngineerIDs).Find(&engineers).Error; err != nil {
-			return nil, fmt.Errorf("failed to find engineers: %w", err)
-		}
-		if err := r.DB.Model(&newTeam).Association("Engineers").Append(engineers); err != nil {
-			return nil, fmt.Errorf("failed to associate engineers: %w", err)
-		}
-	}
-
 	return &model.Team{
-		ID: newTeam.ID,
-		TeamLeader: &model.Employee{
-			ID: input.TeamLeaderID,
-		},
+		ID:           newTeam.ID,
+		Name:         newTeam.Name,
+		TeamLeaderID: newTeam.TeamLeaderID,
+		Description:  newTeam.Description,
+		CreatedAt:    newTeam.CreatedAt,
+		UpdatedAt:    newTeam.UpdatedAt,
 	}, nil
 }
 
 // UpdateTeam is the resolver for the updateTeam field.
-func (r *mutationResolver) UpdateTeam(ctx context.Context, id string, input model.TeamInput) (*model.Team, error) {
+func (r *mutationResolver) UpdateTeam(ctx context.Context, id int, input model.TeamInput) (*model.Team, error) {
 	var team db.Team
 	if err := r.DB.Where("id = ?", id).First(&team).Error; err != nil {
 		return nil, fmt.Errorf("team not found: %w", err)
 	}
 
-	if input.TeamLeaderID != "" {
-		team.TeamLeaderID = &input.TeamLeaderID
+	if input.Name != "" {
+		team.Name = input.Name
+	}
+	if input.TeamLeaderID != nil {
+		team.TeamLeaderID = input.TeamLeaderID
+	}
+	if input.Description != nil {
+		team.Description = input.Description
 	}
 
 	if err := r.DB.Save(&team).Error; err != nil {
 		return nil, fmt.Errorf("failed to update team: %w", err)
 	}
 
-	if input.EngineerIDs != nil {
-		if err := r.DB.Model(&team).Association("Engineers").Clear(); err != nil {
-			return nil, fmt.Errorf("failed to clear engineer associations: %w", err)
-		}
-
-		// Add new associations
-		if len(input.EngineerIDs) > 0 {
-			var engineers []db.Employee
-			if err := r.DB.Where("id IN ?", input.EngineerIDs).Find(&engineers).Error; err != nil {
-				return nil, fmt.Errorf("failed to find engineers: %w", err)
-			}
-			if err := r.DB.Model(&team).Association("Engineers").Append(engineers); err != nil {
-				return nil, fmt.Errorf("failed to associate engineers: %w", err)
-			}
-		}
-	}
-
 	return &model.Team{
-		ID: team.ID,
-		TeamLeader: &model.Employee{
-			ID: *team.TeamLeaderID,
-		},
+		ID:           team.ID,
+		Name:         team.Name,
+		TeamLeaderID: team.TeamLeaderID,
+		Description:  team.Description,
+		CreatedAt:    team.CreatedAt,
+		UpdatedAt:    team.UpdatedAt,
 	}, nil
 }
 
 // DeleteTeam is the resolver for the deleteTeam field.
-func (r *mutationResolver) DeleteTeam(ctx context.Context, id string) (bool, error) {
+func (r *mutationResolver) DeleteTeam(ctx context.Context, id int) (bool, error) {
 	var team db.Team
 	if err := r.DB.Where("id = ?", id).First(&team).Error; err != nil {
 		return false, fmt.Errorf("team not found: %w", err)
@@ -270,17 +245,23 @@ func (r *mutationResolver) DeleteTeam(ctx context.Context, id string) (bool, err
 
 // AddTicket is the resolver for the addTicket field.
 func (r *mutationResolver) AddTicket(ctx context.Context, input model.TicketInput) (*model.Ticket, error) {
-
 	status := db.StatusNotStartedDB
 	if input.Status != "" {
 		status = db.StatusToDB(input.Status)
 	}
 
+	priority := "MEDIUM"
+	if input.Priority != nil {
+		priority = string(*input.Priority)
+	}
+
 	newTicket := db.Ticket{
-		ProjectID:   input.ProjectID,
-		Status:      status,
-		Title:       input.Title,
-		Description: input.Description,
+		ProjectID:    input.ProjectID,
+		AssignedToID: input.AssignedToID,
+		Status:       status,
+		Title:        input.Title,
+		Description:  input.Description,
+		Priority:     priority,
 	}
 
 	if err := r.DB.Create(&newTicket).Error; err != nil {
@@ -288,19 +269,20 @@ func (r *mutationResolver) AddTicket(ctx context.Context, input model.TicketInpu
 	}
 
 	return &model.Ticket{
-		ID:          newTicket.ID,
-		Title:       newTicket.Title,
-		Description: newTicket.Description,
-		Status:      db.StatusToModel(newTicket.Status),
-		CreatedAt:   newTicket.CreatedAt,
-		Project: &model.Project{
-			ID: newTicket.ProjectID,
-		},
+		ID:           newTicket.ID,
+		ProjectID:    newTicket.ProjectID,
+		AssignedToID: newTicket.AssignedToID,
+		Title:        newTicket.Title,
+		Description:  newTicket.Description,
+		Status:       db.StatusToModel(newTicket.Status),
+		Priority:     model.Priority(newTicket.Priority),
+		CreatedAt:    newTicket.CreatedAt,
+		CompletedAt:  newTicket.CompletedAt,
 	}, nil
 }
 
 // UpdateTicket is the resolver for the updateTicket field.
-func (r *mutationResolver) UpdateTicket(ctx context.Context, id string, input model.TicketInput) (*model.Ticket, error) {
+func (r *mutationResolver) UpdateTicket(ctx context.Context, id int, input model.TicketInput) (*model.Ticket, error) {
 	var ticket db.Ticket
 	if err := r.DB.Where("id = ?", id).First(&ticket).Error; err != nil {
 		return nil, fmt.Errorf("ticket not found: %w", err)
@@ -315,8 +297,14 @@ func (r *mutationResolver) UpdateTicket(ctx context.Context, id string, input mo
 	if input.Status != "" {
 		ticket.Status = db.StatusToDB(input.Status)
 	}
-	if input.ProjectID != "" {
+	if input.ProjectID != 0 {
 		ticket.ProjectID = input.ProjectID
+	}
+	if input.AssignedToID != nil {
+		ticket.AssignedToID = input.AssignedToID
+	}
+	if input.Priority != nil {
+		ticket.Priority = string(*input.Priority)
 	}
 
 	if input.Status == "COMPLETED" {
@@ -329,20 +317,20 @@ func (r *mutationResolver) UpdateTicket(ctx context.Context, id string, input mo
 	}
 
 	return &model.Ticket{
-		ID:          ticket.ID,
-		Title:       ticket.Title,
-		Description: ticket.Description,
-		Status:      db.StatusToModel(ticket.Status),
-		CreatedAt:   ticket.CreatedAt,
-		CompletedAt: ticket.CompletedAt,
-		Project: &model.Project{
-			ID: ticket.ProjectID,
-		},
+		ID:           ticket.ID,
+		ProjectID:    ticket.ProjectID,
+		AssignedToID: ticket.AssignedToID,
+		Title:        ticket.Title,
+		Description:  ticket.Description,
+		Status:       db.StatusToModel(ticket.Status),
+		Priority:     model.Priority(ticket.Priority),
+		CreatedAt:    ticket.CreatedAt,
+		CompletedAt:  ticket.CompletedAt,
 	}, nil
 }
 
 // DeleteTicket is the resolver for the deleteTicket field.
-func (r *mutationResolver) DeleteTicket(ctx context.Context, id string) (bool, error) {
+func (r *mutationResolver) DeleteTicket(ctx context.Context, id int) (bool, error) {
 	var ticket db.Ticket
 	if err := r.DB.Where("id = ?", id).First(&ticket).Error; err != nil {
 		return false, fmt.Errorf("ticket not found: %w", err)
@@ -357,17 +345,25 @@ func (r *mutationResolver) DeleteTicket(ctx context.Context, id string) (bool, e
 
 // AddTask is the resolver for the addTask field.
 func (r *mutationResolver) AddTask(ctx context.Context, input model.TaskInput) (*model.Task, error) {
-	// Set default status if not provided
 	status := db.StatusNotStartedDB
 	if input.Status != "" {
 		status = db.StatusToDB(input.Status)
 	}
+
+	priority := "MEDIUM"
+	if input.Priority != nil {
+		priority = string(*input.Priority)
+	}
+
 	newTask := db.Task{
 		Title:        input.Title,
 		Description:  input.Description,
 		AssignedToID: input.AssignedToID,
+		ProjectID:    input.ProjectID,
 		Status:       status,
+		Priority:     priority,
 	}
+
 	if input.DueDate != nil {
 		dueDate, err := time.Parse("2006-01-02", *input.DueDate)
 		if err != nil {
@@ -381,31 +377,27 @@ func (r *mutationResolver) AddTask(ctx context.Context, input model.TaskInput) (
 	}
 
 	result := &model.Task{
-		ID:          newTask.ID,
-		Title:       newTask.Title,
-		Description: newTask.Description,
-		Status:      db.StatusToModel(newTask.Status),
-		CreatedAt:   newTask.CreatedAt,
-		DueDate:     input.DueDate,
-	}
-
-	if newTask.AssignedToID != nil {
-		result.AssignedTo = &model.Employee{
-			ID: *newTask.AssignedToID,
-		}
+		ID:           newTask.ID,
+		Title:        newTask.Title,
+		Description:  newTask.Description,
+		Status:       db.StatusToModel(newTask.Status),
+		Priority:     model.Priority(newTask.Priority),
+		CreatedAt:    newTask.CreatedAt,
+		AssignedToID: newTask.AssignedToID,
+		ProjectID:    newTask.ProjectID,
+		DueDate:      input.DueDate,
 	}
 
 	return result, nil
 }
 
 // UpdateTask is the resolver for the updateTask field.
-func (r *mutationResolver) UpdateTask(ctx context.Context, id string, input model.TaskInput) (*model.Task, error) {
+func (r *mutationResolver) UpdateTask(ctx context.Context, id int, input model.TaskInput) (*model.Task, error) {
 	var task db.Task
 	if err := r.DB.Where("id = ?", id).First(&task).Error; err != nil {
 		return nil, fmt.Errorf("task not found: %w", err)
 	}
 
-	// Update fields if provided
 	if input.Title != "" {
 		task.Title = input.Title
 	}
@@ -415,11 +407,16 @@ func (r *mutationResolver) UpdateTask(ctx context.Context, id string, input mode
 	if input.AssignedToID != nil {
 		task.AssignedToID = input.AssignedToID
 	}
+	if input.ProjectID != nil {
+		task.ProjectID = input.ProjectID
+	}
 	if input.Status != "" {
 		task.Status = db.StatusToDB(input.Status)
 	}
+	if input.Priority != nil {
+		task.Priority = string(*input.Priority)
+	}
 
-	// Parse due date if provided
 	if input.DueDate != nil {
 		dueDate, err := time.Parse("2006-01-02", *input.DueDate)
 		if err != nil {
@@ -428,7 +425,6 @@ func (r *mutationResolver) UpdateTask(ctx context.Context, id string, input mode
 		task.DueDate = &dueDate
 	}
 
-	// Set completed date if status is completed
 	if input.Status == "COMPLETED" {
 		now := time.Now()
 		task.CompletedAt = &now
@@ -439,27 +435,23 @@ func (r *mutationResolver) UpdateTask(ctx context.Context, id string, input mode
 	}
 
 	result := &model.Task{
-		ID:          task.ID,
-		Title:       task.Title,
-		Description: task.Description,
-		Status:      db.StatusToModel(task.Status),
-		CreatedAt:   task.CreatedAt,
-		CompletedAt: task.CompletedAt,
-		DueDate:     input.DueDate,
-	}
-
-	// Only set AssignedTo if AssignedToID is not nil
-	if task.AssignedToID != nil {
-		result.AssignedTo = &model.Employee{
-			ID: *task.AssignedToID,
-		}
+		ID:           task.ID,
+		Title:        task.Title,
+		Description:  task.Description,
+		Status:       db.StatusToModel(task.Status),
+		Priority:     model.Priority(task.Priority),
+		CreatedAt:    task.CreatedAt,
+		CompletedAt:  task.CompletedAt,
+		AssignedToID: task.AssignedToID,
+		ProjectID:    task.ProjectID,
+		DueDate:      input.DueDate,
 	}
 
 	return result, nil
 }
 
 // DeleteTask is the resolver for the deleteTask field.
-func (r *mutationResolver) DeleteTask(ctx context.Context, id string) (bool, error) {
+func (r *mutationResolver) DeleteTask(ctx context.Context, id int) (bool, error) {
 	var task db.Task
 	if err := r.DB.Where("id = ?", id).First(&task).Error; err != nil {
 		return false, fmt.Errorf("task not found: %w", err)
@@ -473,13 +465,189 @@ func (r *mutationResolver) DeleteTask(ctx context.Context, id string) (bool, err
 }
 
 // AddNotification is the resolver for the addNotification field.
-func (r *mutationResolver) AddNotification(ctx context.Context, message string, employeeID string) (*model.Notification, error) {
-	panic(fmt.Errorf("not implemented: AddNotification - addNotification"))
+func (r *mutationResolver) AddNotification(ctx context.Context, message string, employeeID int, typeArg *model.NotificationType) (*model.Notification, error) {
+	// Verify employee exists
+	var employee db.Employee
+	if err := r.DB.Where("id = ?", employeeID).First(&employee).Error; err != nil {
+		return nil, fmt.Errorf("employee not found: %w", err)
+	}
+
+	notificationTypeStr := "INFO"
+	if typeArg != nil {
+		notificationTypeStr = string(*typeArg)
+	}
+
+	newNotification := db.Notification{
+		Message:    message,
+		EmployeeID: employeeID,
+		Type:       notificationTypeStr,
+		Read:       false,
+	}
+
+	if err := r.DB.Create(&newNotification).Error; err != nil {
+		return nil, fmt.Errorf("failed to create notification: %w", err)
+	}
+
+	return &model.Notification{
+		ID:         newNotification.ID,
+		Message:    newNotification.Message,
+		EmployeeID: newNotification.EmployeeID,
+		Type:       model.NotificationType(newNotification.Type),
+		Read:       newNotification.Read,
+		CreatedAt:  newNotification.CreatedAt,
+	}, nil
 }
 
 // MarkNotificationRead is the resolver for the markNotificationRead field.
-func (r *mutationResolver) MarkNotificationRead(ctx context.Context, id string) (bool, error) {
-	panic(fmt.Errorf("not implemented: MarkNotificationRead - markNotificationRead"))
+func (r *mutationResolver) MarkNotificationRead(ctx context.Context, id int) (bool, error) {
+	var notification db.Notification
+	if err := r.DB.Where("id = ?", id).First(&notification).Error; err != nil {
+		return false, fmt.Errorf("notification not found: %w", err)
+	}
+
+	notification.Read = true
+	if err := r.DB.Save(&notification).Error; err != nil {
+		return false, fmt.Errorf("failed to mark notification as read: %w", err)
+	}
+
+	return true, nil
+}
+
+// AddTeamEngineer is the resolver for the addTeamEngineer field.
+func (r *mutationResolver) AddTeamEngineer(ctx context.Context, input model.TeamEngineerInput) (*model.TeamEngineer, error) {
+	// Verify team and engineer exist
+	var team db.Team
+	if err := r.DB.Where("id = ?", input.TeamID).First(&team).Error; err != nil {
+		return nil, fmt.Errorf("team not found: %w", err)
+	}
+
+	var employee db.Employee
+	if err := r.DB.Where("id = ?", input.EngineerID).First(&employee).Error; err != nil {
+		return nil, fmt.Errorf("engineer not found: %w", err)
+	}
+
+	teamEngineer := db.TeamEngineer{
+		TeamID:     input.TeamID,
+		EngineerID: input.EngineerID,
+	}
+
+	if err := r.DB.Create(&teamEngineer).Error; err != nil {
+		return nil, fmt.Errorf("failed to add engineer to team: %w", err)
+	}
+
+	return &model.TeamEngineer{
+		TeamID:     teamEngineer.TeamID,
+		EngineerID: teamEngineer.EngineerID,
+		CreatedAt:  teamEngineer.CreatedAt,
+	}, nil
+}
+
+// RemoveTeamEngineer is the resolver for the removeTeamEngineer field.
+func (r *mutationResolver) RemoveTeamEngineer(ctx context.Context, input model.TeamEngineerInput) (bool, error) {
+	if err := r.DB.Where("team_id = ? AND engineer_id = ?", input.TeamID, input.EngineerID).Delete(&db.TeamEngineer{}).Error; err != nil {
+		return false, fmt.Errorf("failed to remove engineer from team: %w", err)
+	}
+
+	return true, nil
+}
+
+// AddProjectTeam is the resolver for the addProjectTeam field.
+func (r *mutationResolver) AddProjectTeam(ctx context.Context, input model.ProjectTeamInput) (*model.ProjectTeam, error) {
+	// Verify project and team exist
+	var project db.Project
+	if err := r.DB.Where("id = ?", input.ProjectID).First(&project).Error; err != nil {
+		return nil, fmt.Errorf("project not found: %w", err)
+	}
+
+	var team db.Team
+	if err := r.DB.Where("id = ?", input.TeamID).First(&team).Error; err != nil {
+		return nil, fmt.Errorf("team not found: %w", err)
+	}
+
+	projectTeam := db.ProjectTeam{
+		ProjectID: input.ProjectID,
+		TeamID:    input.TeamID,
+	}
+
+	if err := r.DB.Create(&projectTeam).Error; err != nil {
+		return nil, fmt.Errorf("failed to add team to project: %w", err)
+	}
+
+	return &model.ProjectTeam{
+		ProjectID: projectTeam.ProjectID,
+		TeamID:    projectTeam.TeamID,
+		CreatedAt: projectTeam.CreatedAt,
+	}, nil
+}
+
+// RemoveProjectTeam is the resolver for the removeProjectTeam field.
+func (r *mutationResolver) RemoveProjectTeam(ctx context.Context, input model.ProjectTeamInput) (bool, error) {
+	if err := r.DB.Where("project_id = ? AND team_id = ?", input.ProjectID, input.TeamID).Delete(&db.ProjectTeam{}).Error; err != nil {
+		return false, fmt.Errorf("failed to remove team from project: %w", err)
+	}
+
+	return true, nil
+}
+
+// AddProjectEmployee is the resolver for the addProjectEmployee field.
+func (r *mutationResolver) AddProjectEmployee(ctx context.Context, input model.ProjectEmployeeInput) (*model.ProjectEmployee, error) {
+	// Verify project and employee exist
+	var project db.Project
+	if err := r.DB.Where("id = ?", input.ProjectID).First(&project).Error; err != nil {
+		return nil, fmt.Errorf("project not found: %w", err)
+	}
+
+	var employee db.Employee
+	if err := r.DB.Where("id = ?", input.EmployeeID).First(&employee).Error; err != nil {
+		return nil, fmt.Errorf("employee not found: %w", err)
+	}
+
+	projectEmployee := db.ProjectEmployee{
+		ProjectID:  input.ProjectID,
+		EmployeeID: input.EmployeeID,
+		Role:       input.Role,
+	}
+
+	if err := r.DB.Create(&projectEmployee).Error; err != nil {
+		return nil, fmt.Errorf("failed to add employee to project: %w", err)
+	}
+
+	return &model.ProjectEmployee{
+		ProjectID:  projectEmployee.ProjectID,
+		EmployeeID: projectEmployee.EmployeeID,
+		Role:       projectEmployee.Role,
+		CreatedAt:  projectEmployee.CreatedAt,
+	}, nil
+}
+
+// RemoveProjectEmployee is the resolver for the removeProjectEmployee field.
+func (r *mutationResolver) RemoveProjectEmployee(ctx context.Context, input model.ProjectEmployeeInput) (bool, error) {
+	if err := r.DB.Where("project_id = ? AND employee_id = ?", input.ProjectID, input.EmployeeID).Delete(&db.ProjectEmployee{}).Error; err != nil {
+		return false, fmt.Errorf("failed to remove employee from project: %w", err)
+	}
+
+	return true, nil
+}
+
+// UpdateProjectEmployeeRole is the resolver for the updateProjectEmployeeRole field.
+func (r *mutationResolver) UpdateProjectEmployeeRole(ctx context.Context, input model.ProjectEmployeeInput) (*model.ProjectEmployee, error) {
+	var projectEmployee db.ProjectEmployee
+	if err := r.DB.Where("project_id = ? AND employee_id = ?", input.ProjectID, input.EmployeeID).First(&projectEmployee).Error; err != nil {
+		return nil, fmt.Errorf("project employee relationship not found: %w", err)
+	}
+
+	projectEmployee.Role = input.Role
+
+	if err := r.DB.Save(&projectEmployee).Error; err != nil {
+		return nil, fmt.Errorf("failed to update project employee role: %w", err)
+	}
+
+	return &model.ProjectEmployee{
+		ProjectID:  projectEmployee.ProjectID,
+		EmployeeID: projectEmployee.EmployeeID,
+		Role:       projectEmployee.Role,
+		CreatedAt:  projectEmployee.CreatedAt,
+	}, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

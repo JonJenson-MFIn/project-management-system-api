@@ -35,15 +35,15 @@ func BenchmarkAuthDirective(b *testing.B) {
 	defer srv.Close()
 
 	body, _ := json.Marshal(GraphQLRequest{
-		Query: `mutation { deleteEmployee(id: "1") }`,
+		Query: `mutation { deleteEmployee(id: 1) }`,
 	})
 
-	b.ResetTimer() // Ignore setup time
+	b.ResetTimer() 
 
 	for i := 0; i < b.N; i++ {
 		req := httptest.NewRequest("POST", "/", bytes.NewBuffer(body))
 		req.Header.Set("Content-Type", "application/json")
-		req = req.WithContext(context.WithValue(req.Context(), "role", model.RoleAdmin)) // change role if needed
+		req = req.WithContext(context.WithValue(req.Context(), "role", model.RoleAdmin)) 
 
 		w := httptest.NewRecorder()
 		srv.Config.Handler.ServeHTTP(w, req)

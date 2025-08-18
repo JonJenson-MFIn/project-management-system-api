@@ -18,22 +18,29 @@ import (
 
 type MutationResolver interface {
 	AddEmployee(ctx context.Context, input model.EmployeeInput) (*model.Employee, error)
-	UpdateEmployee(ctx context.Context, id string, input model.EmployeeInput) (*model.Employee, error)
-	DeleteEmployee(ctx context.Context, id string) (bool, error)
+	UpdateEmployee(ctx context.Context, id int, input model.EmployeeInput) (*model.Employee, error)
+	DeleteEmployee(ctx context.Context, id int) (bool, error)
 	AddProject(ctx context.Context, input model.ProjectInput) (*model.Project, error)
-	UpdateProject(ctx context.Context, id string, input model.ProjectInput) (*model.Project, error)
-	DeleteProject(ctx context.Context, id string) (bool, error)
+	UpdateProject(ctx context.Context, id int, input model.ProjectInput) (*model.Project, error)
+	DeleteProject(ctx context.Context, id int) (bool, error)
 	AddTeam(ctx context.Context, input model.TeamInput) (*model.Team, error)
-	UpdateTeam(ctx context.Context, id string, input model.TeamInput) (*model.Team, error)
-	DeleteTeam(ctx context.Context, id string) (bool, error)
+	UpdateTeam(ctx context.Context, id int, input model.TeamInput) (*model.Team, error)
+	DeleteTeam(ctx context.Context, id int) (bool, error)
 	AddTicket(ctx context.Context, input model.TicketInput) (*model.Ticket, error)
-	UpdateTicket(ctx context.Context, id string, input model.TicketInput) (*model.Ticket, error)
-	DeleteTicket(ctx context.Context, id string) (bool, error)
+	UpdateTicket(ctx context.Context, id int, input model.TicketInput) (*model.Ticket, error)
+	DeleteTicket(ctx context.Context, id int) (bool, error)
 	AddTask(ctx context.Context, input model.TaskInput) (*model.Task, error)
-	UpdateTask(ctx context.Context, id string, input model.TaskInput) (*model.Task, error)
-	DeleteTask(ctx context.Context, id string) (bool, error)
-	AddNotification(ctx context.Context, message string, employeeID string) (*model.Notification, error)
-	MarkNotificationRead(ctx context.Context, id string) (bool, error)
+	UpdateTask(ctx context.Context, id int, input model.TaskInput) (*model.Task, error)
+	DeleteTask(ctx context.Context, id int) (bool, error)
+	AddNotification(ctx context.Context, message string, employeeID int, typeArg *model.NotificationType) (*model.Notification, error)
+	MarkNotificationRead(ctx context.Context, id int) (bool, error)
+	AddTeamEngineer(ctx context.Context, input model.TeamEngineerInput) (*model.TeamEngineer, error)
+	RemoveTeamEngineer(ctx context.Context, input model.TeamEngineerInput) (bool, error)
+	AddProjectTeam(ctx context.Context, input model.ProjectTeamInput) (*model.ProjectTeam, error)
+	RemoveProjectTeam(ctx context.Context, input model.ProjectTeamInput) (bool, error)
+	AddProjectEmployee(ctx context.Context, input model.ProjectEmployeeInput) (*model.ProjectEmployee, error)
+	RemoveProjectEmployee(ctx context.Context, input model.ProjectEmployeeInput) (bool, error)
+	UpdateProjectEmployeeRole(ctx context.Context, input model.ProjectEmployeeInput) (*model.ProjectEmployee, error)
 }
 
 // endregion ************************** generated!.gotpl **************************
@@ -59,11 +66,38 @@ func (ec *executionContext) field_Mutation_addNotification_args(ctx context.Cont
 		return nil, err
 	}
 	args["message"] = arg0
-	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "employeeID", ec.unmarshalNID2string)
+	arg1, err := graphql.ProcessArgField(ctx, rawArgs, "employeeID", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
 	args["employeeID"] = arg1
+	arg2, err := graphql.ProcessArgField(ctx, rawArgs, "type", ec.unmarshalONotificationType2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐNotificationType)
+	if err != nil {
+		return nil, err
+	}
+	args["type"] = arg2
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_addProjectEmployee_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNProjectEmployeeInput2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectEmployeeInput)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_addProjectTeam_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNProjectTeamInput2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectTeamInput)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -82,6 +116,17 @@ func (ec *executionContext) field_Mutation_addTask_args(ctx context.Context, raw
 	var err error
 	args := map[string]any{}
 	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNTaskInput2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTaskInput)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_addTeamEngineer_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNTeamEngineerInput2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTeamEngineerInput)
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +159,7 @@ func (ec *executionContext) field_Mutation_addTicket_args(ctx context.Context, r
 func (ec *executionContext) field_Mutation_deleteEmployee_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +170,7 @@ func (ec *executionContext) field_Mutation_deleteEmployee_args(ctx context.Conte
 func (ec *executionContext) field_Mutation_deleteProject_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +181,7 @@ func (ec *executionContext) field_Mutation_deleteProject_args(ctx context.Contex
 func (ec *executionContext) field_Mutation_deleteTask_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
@@ -147,7 +192,7 @@ func (ec *executionContext) field_Mutation_deleteTask_args(ctx context.Context, 
 func (ec *executionContext) field_Mutation_deleteTeam_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
@@ -158,7 +203,7 @@ func (ec *executionContext) field_Mutation_deleteTeam_args(ctx context.Context, 
 func (ec *executionContext) field_Mutation_deleteTicket_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
@@ -169,7 +214,7 @@ func (ec *executionContext) field_Mutation_deleteTicket_args(ctx context.Context
 func (ec *executionContext) field_Mutation_markNotificationRead_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
@@ -177,10 +222,43 @@ func (ec *executionContext) field_Mutation_markNotificationRead_args(ctx context
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_removeProjectEmployee_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNProjectEmployeeInput2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectEmployeeInput)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_removeProjectTeam_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNProjectTeamInput2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectTeamInput)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_removeTeamEngineer_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNTeamEngineerInput2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTeamEngineerInput)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_updateEmployee_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
@@ -193,10 +271,21 @@ func (ec *executionContext) field_Mutation_updateEmployee_args(ctx context.Conte
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_updateProjectEmployeeRole_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNProjectEmployeeInput2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectEmployeeInput)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_updateProject_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
@@ -212,7 +301,7 @@ func (ec *executionContext) field_Mutation_updateProject_args(ctx context.Contex
 func (ec *executionContext) field_Mutation_updateTask_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
@@ -228,7 +317,7 @@ func (ec *executionContext) field_Mutation_updateTask_args(ctx context.Context, 
 func (ec *executionContext) field_Mutation_updateTeam_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
@@ -244,7 +333,7 @@ func (ec *executionContext) field_Mutation_updateTeam_args(ctx context.Context, 
 func (ec *executionContext) field_Mutation_updateTicket_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNID2string)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "id", ec.unmarshalNInt2int)
 	if err != nil {
 		return nil, err
 	}
@@ -278,8 +367,35 @@ func (ec *executionContext) _Mutation_addEmployee(ctx context.Context, field gra
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().AddEmployee(rctx, fc.Args["input"].(model.EmployeeInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().AddEmployee(rctx, fc.Args["input"].(model.EmployeeInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐRole(ctx, "ADMIN")
+			if err != nil {
+				var zeroVal *model.Employee
+				return zeroVal, err
+			}
+			if ec.directives.Auth == nil {
+				var zeroVal *model.Employee
+				return zeroVal, errors.New("directive auth is not implemented")
+			}
+			return ec.directives.Auth(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.Employee); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/JonJenson-MFIn/project-management-system-api/graph/model.Employee`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -314,8 +430,12 @@ func (ec *executionContext) fieldContext_Mutation_addEmployee(ctx context.Contex
 				return ec.fieldContext_Employee_role(ctx, field)
 			case "active":
 				return ec.fieldContext_Employee_active(ctx, field)
-			case "project_assigned":
-				return ec.fieldContext_Employee_project_assigned(ctx, field)
+			case "projectAssignedID":
+				return ec.fieldContext_Employee_projectAssignedID(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Employee_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Employee_updatedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Employee", field.Name)
 		},
@@ -348,7 +468,7 @@ func (ec *executionContext) _Mutation_updateEmployee(ctx context.Context, field 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateEmployee(rctx, fc.Args["id"].(string), fc.Args["input"].(model.EmployeeInput))
+		return ec.resolvers.Mutation().UpdateEmployee(rctx, fc.Args["id"].(int), fc.Args["input"].(model.EmployeeInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -383,8 +503,12 @@ func (ec *executionContext) fieldContext_Mutation_updateEmployee(ctx context.Con
 				return ec.fieldContext_Employee_role(ctx, field)
 			case "active":
 				return ec.fieldContext_Employee_active(ctx, field)
-			case "project_assigned":
-				return ec.fieldContext_Employee_project_assigned(ctx, field)
+			case "projectAssignedID":
+				return ec.fieldContext_Employee_projectAssignedID(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Employee_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Employee_updatedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Employee", field.Name)
 		},
@@ -418,7 +542,7 @@ func (ec *executionContext) _Mutation_deleteEmployee(ctx context.Context, field 
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		directive0 := func(rctx context.Context) (any, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().DeleteEmployee(rctx, fc.Args["id"].(string))
+			return ec.resolvers.Mutation().DeleteEmployee(rctx, fc.Args["id"].(int))
 		}
 
 		directive1 := func(ctx context.Context) (any, error) {
@@ -526,20 +650,20 @@ func (ec *executionContext) fieldContext_Mutation_addProject(ctx context.Context
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Project_id(ctx, field)
-			case "manager":
-				return ec.fieldContext_Project_manager(ctx, field)
-			case "teams":
-				return ec.fieldContext_Project_teams(ctx, field)
+			case "managerID":
+				return ec.fieldContext_Project_managerID(ctx, field)
 			case "name":
 				return ec.fieldContext_Project_name(ctx, field)
 			case "status":
 				return ec.fieldContext_Project_status(ctx, field)
-			case "tickets":
-				return ec.fieldContext_Project_tickets(ctx, field)
 			case "description":
 				return ec.fieldContext_Project_description(ctx, field)
 			case "startDate":
 				return ec.fieldContext_Project_startDate(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Project_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Project_updatedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Project", field.Name)
 		},
@@ -572,7 +696,7 @@ func (ec *executionContext) _Mutation_updateProject(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateProject(rctx, fc.Args["id"].(string), fc.Args["input"].(model.ProjectInput))
+		return ec.resolvers.Mutation().UpdateProject(rctx, fc.Args["id"].(int), fc.Args["input"].(model.ProjectInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -599,20 +723,20 @@ func (ec *executionContext) fieldContext_Mutation_updateProject(ctx context.Cont
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Project_id(ctx, field)
-			case "manager":
-				return ec.fieldContext_Project_manager(ctx, field)
-			case "teams":
-				return ec.fieldContext_Project_teams(ctx, field)
+			case "managerID":
+				return ec.fieldContext_Project_managerID(ctx, field)
 			case "name":
 				return ec.fieldContext_Project_name(ctx, field)
 			case "status":
 				return ec.fieldContext_Project_status(ctx, field)
-			case "tickets":
-				return ec.fieldContext_Project_tickets(ctx, field)
 			case "description":
 				return ec.fieldContext_Project_description(ctx, field)
 			case "startDate":
 				return ec.fieldContext_Project_startDate(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Project_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Project_updatedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Project", field.Name)
 		},
@@ -645,7 +769,7 @@ func (ec *executionContext) _Mutation_deleteProject(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteProject(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Mutation().DeleteProject(rctx, fc.Args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -727,10 +851,16 @@ func (ec *executionContext) fieldContext_Mutation_addTeam(ctx context.Context, f
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Team_id(ctx, field)
-			case "teamLeader":
-				return ec.fieldContext_Team_teamLeader(ctx, field)
-			case "engineers":
-				return ec.fieldContext_Team_engineers(ctx, field)
+			case "teamLeaderID":
+				return ec.fieldContext_Team_teamLeaderID(ctx, field)
+			case "name":
+				return ec.fieldContext_Team_name(ctx, field)
+			case "description":
+				return ec.fieldContext_Team_description(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Team_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Team_updatedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Team", field.Name)
 		},
@@ -763,7 +893,7 @@ func (ec *executionContext) _Mutation_updateTeam(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateTeam(rctx, fc.Args["id"].(string), fc.Args["input"].(model.TeamInput))
+		return ec.resolvers.Mutation().UpdateTeam(rctx, fc.Args["id"].(int), fc.Args["input"].(model.TeamInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -790,10 +920,16 @@ func (ec *executionContext) fieldContext_Mutation_updateTeam(ctx context.Context
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Team_id(ctx, field)
-			case "teamLeader":
-				return ec.fieldContext_Team_teamLeader(ctx, field)
-			case "engineers":
-				return ec.fieldContext_Team_engineers(ctx, field)
+			case "teamLeaderID":
+				return ec.fieldContext_Team_teamLeaderID(ctx, field)
+			case "name":
+				return ec.fieldContext_Team_name(ctx, field)
+			case "description":
+				return ec.fieldContext_Team_description(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Team_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Team_updatedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Team", field.Name)
 		},
@@ -826,7 +962,7 @@ func (ec *executionContext) _Mutation_deleteTeam(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteTeam(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Mutation().DeleteTeam(rctx, fc.Args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -908,18 +1044,22 @@ func (ec *executionContext) fieldContext_Mutation_addTicket(ctx context.Context,
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Ticket_id(ctx, field)
+			case "projectID":
+				return ec.fieldContext_Ticket_projectID(ctx, field)
+			case "assignedToID":
+				return ec.fieldContext_Ticket_assignedToID(ctx, field)
 			case "status":
 				return ec.fieldContext_Ticket_status(ctx, field)
 			case "title":
 				return ec.fieldContext_Ticket_title(ctx, field)
 			case "description":
 				return ec.fieldContext_Ticket_description(ctx, field)
+			case "priority":
+				return ec.fieldContext_Ticket_priority(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Ticket_createdAt(ctx, field)
 			case "completedAt":
 				return ec.fieldContext_Ticket_completedAt(ctx, field)
-			case "project":
-				return ec.fieldContext_Ticket_project(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Ticket", field.Name)
 		},
@@ -952,7 +1092,7 @@ func (ec *executionContext) _Mutation_updateTicket(ctx context.Context, field gr
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateTicket(rctx, fc.Args["id"].(string), fc.Args["input"].(model.TicketInput))
+		return ec.resolvers.Mutation().UpdateTicket(rctx, fc.Args["id"].(int), fc.Args["input"].(model.TicketInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -979,18 +1119,22 @@ func (ec *executionContext) fieldContext_Mutation_updateTicket(ctx context.Conte
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Ticket_id(ctx, field)
+			case "projectID":
+				return ec.fieldContext_Ticket_projectID(ctx, field)
+			case "assignedToID":
+				return ec.fieldContext_Ticket_assignedToID(ctx, field)
 			case "status":
 				return ec.fieldContext_Ticket_status(ctx, field)
 			case "title":
 				return ec.fieldContext_Ticket_title(ctx, field)
 			case "description":
 				return ec.fieldContext_Ticket_description(ctx, field)
+			case "priority":
+				return ec.fieldContext_Ticket_priority(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Ticket_createdAt(ctx, field)
 			case "completedAt":
 				return ec.fieldContext_Ticket_completedAt(ctx, field)
-			case "project":
-				return ec.fieldContext_Ticket_project(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Ticket", field.Name)
 		},
@@ -1023,7 +1167,7 @@ func (ec *executionContext) _Mutation_deleteTicket(ctx context.Context, field gr
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteTicket(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Mutation().DeleteTicket(rctx, fc.Args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1109,12 +1253,16 @@ func (ec *executionContext) fieldContext_Mutation_addTask(ctx context.Context, f
 				return ec.fieldContext_Task_title(ctx, field)
 			case "description":
 				return ec.fieldContext_Task_description(ctx, field)
-			case "assignedTo":
-				return ec.fieldContext_Task_assignedTo(ctx, field)
+			case "assignedToID":
+				return ec.fieldContext_Task_assignedToID(ctx, field)
+			case "projectID":
+				return ec.fieldContext_Task_projectID(ctx, field)
 			case "dueDate":
 				return ec.fieldContext_Task_dueDate(ctx, field)
 			case "status":
 				return ec.fieldContext_Task_status(ctx, field)
+			case "priority":
+				return ec.fieldContext_Task_priority(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Task_createdAt(ctx, field)
 			case "completedAt":
@@ -1151,7 +1299,7 @@ func (ec *executionContext) _Mutation_updateTask(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateTask(rctx, fc.Args["id"].(string), fc.Args["input"].(model.TaskInput))
+		return ec.resolvers.Mutation().UpdateTask(rctx, fc.Args["id"].(int), fc.Args["input"].(model.TaskInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1182,12 +1330,16 @@ func (ec *executionContext) fieldContext_Mutation_updateTask(ctx context.Context
 				return ec.fieldContext_Task_title(ctx, field)
 			case "description":
 				return ec.fieldContext_Task_description(ctx, field)
-			case "assignedTo":
-				return ec.fieldContext_Task_assignedTo(ctx, field)
+			case "assignedToID":
+				return ec.fieldContext_Task_assignedToID(ctx, field)
+			case "projectID":
+				return ec.fieldContext_Task_projectID(ctx, field)
 			case "dueDate":
 				return ec.fieldContext_Task_dueDate(ctx, field)
 			case "status":
 				return ec.fieldContext_Task_status(ctx, field)
+			case "priority":
+				return ec.fieldContext_Task_priority(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Task_createdAt(ctx, field)
 			case "completedAt":
@@ -1224,7 +1376,7 @@ func (ec *executionContext) _Mutation_deleteTask(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteTask(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Mutation().DeleteTask(rctx, fc.Args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1279,7 +1431,7 @@ func (ec *executionContext) _Mutation_addNotification(ctx context.Context, field
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().AddNotification(rctx, fc.Args["message"].(string), fc.Args["employeeID"].(string))
+		return ec.resolvers.Mutation().AddNotification(rctx, fc.Args["message"].(string), fc.Args["employeeID"].(int), fc.Args["type"].(*model.NotificationType))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1308,8 +1460,10 @@ func (ec *executionContext) fieldContext_Mutation_addNotification(ctx context.Co
 				return ec.fieldContext_Notification_id(ctx, field)
 			case "message":
 				return ec.fieldContext_Notification_message(ctx, field)
-			case "employee":
-				return ec.fieldContext_Notification_employee(ctx, field)
+			case "employeeID":
+				return ec.fieldContext_Notification_employeeID(ctx, field)
+			case "type":
+				return ec.fieldContext_Notification_type(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Notification_createdAt(ctx, field)
 			case "read":
@@ -1346,7 +1500,7 @@ func (ec *executionContext) _Mutation_markNotificationRead(ctx context.Context, 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().MarkNotificationRead(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Mutation().MarkNotificationRead(rctx, fc.Args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1381,6 +1535,427 @@ func (ec *executionContext) fieldContext_Mutation_markNotificationRead(ctx conte
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_markNotificationRead_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_addTeamEngineer(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_addTeamEngineer(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddTeamEngineer(rctx, fc.Args["input"].(model.TeamEngineerInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.TeamEngineer)
+	fc.Result = res
+	return ec.marshalNTeamEngineer2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐTeamEngineer(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_addTeamEngineer(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "teamID":
+				return ec.fieldContext_TeamEngineer_teamID(ctx, field)
+			case "engineerID":
+				return ec.fieldContext_TeamEngineer_engineerID(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_TeamEngineer_createdAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TeamEngineer", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_addTeamEngineer_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_removeTeamEngineer(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_removeTeamEngineer(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RemoveTeamEngineer(rctx, fc.Args["input"].(model.TeamEngineerInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_removeTeamEngineer(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_removeTeamEngineer_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_addProjectTeam(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_addProjectTeam(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddProjectTeam(rctx, fc.Args["input"].(model.ProjectTeamInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ProjectTeam)
+	fc.Result = res
+	return ec.marshalNProjectTeam2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectTeam(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_addProjectTeam(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "projectID":
+				return ec.fieldContext_ProjectTeam_projectID(ctx, field)
+			case "teamID":
+				return ec.fieldContext_ProjectTeam_teamID(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_ProjectTeam_createdAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ProjectTeam", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_addProjectTeam_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_removeProjectTeam(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_removeProjectTeam(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RemoveProjectTeam(rctx, fc.Args["input"].(model.ProjectTeamInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_removeProjectTeam(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_removeProjectTeam_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_addProjectEmployee(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_addProjectEmployee(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddProjectEmployee(rctx, fc.Args["input"].(model.ProjectEmployeeInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ProjectEmployee)
+	fc.Result = res
+	return ec.marshalNProjectEmployee2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectEmployee(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_addProjectEmployee(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "projectID":
+				return ec.fieldContext_ProjectEmployee_projectID(ctx, field)
+			case "employeeID":
+				return ec.fieldContext_ProjectEmployee_employeeID(ctx, field)
+			case "role":
+				return ec.fieldContext_ProjectEmployee_role(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_ProjectEmployee_createdAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ProjectEmployee", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_addProjectEmployee_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_removeProjectEmployee(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_removeProjectEmployee(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RemoveProjectEmployee(rctx, fc.Args["input"].(model.ProjectEmployeeInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_removeProjectEmployee(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_removeProjectEmployee_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateProjectEmployeeRole(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateProjectEmployeeRole(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateProjectEmployeeRole(rctx, fc.Args["input"].(model.ProjectEmployeeInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ProjectEmployee)
+	fc.Result = res
+	return ec.marshalNProjectEmployee2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐProjectEmployee(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateProjectEmployeeRole(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "projectID":
+				return ec.fieldContext_ProjectEmployee_projectID(ctx, field)
+			case "employeeID":
+				return ec.fieldContext_ProjectEmployee_employeeID(ctx, field)
+			case "role":
+				return ec.fieldContext_ProjectEmployee_role(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_ProjectEmployee_createdAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ProjectEmployee", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateProjectEmployeeRole_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -1533,6 +2108,55 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "markNotificationRead":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_markNotificationRead(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "addTeamEngineer":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_addTeamEngineer(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "removeTeamEngineer":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_removeTeamEngineer(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "addProjectTeam":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_addProjectTeam(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "removeProjectTeam":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_removeProjectTeam(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "addProjectEmployee":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_addProjectEmployee(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "removeProjectEmployee":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_removeProjectEmployee(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updateProjectEmployeeRole":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateProjectEmployeeRole(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
