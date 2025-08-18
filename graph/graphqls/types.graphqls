@@ -31,3 +31,183 @@ enum NotificationType {
   ERROR
   SUCCESS
 }
+
+# ---------- Directive -----------
+directive @auth(role: Role!) on FIELD_DEFINITION
+
+# ----------- Types -----------
+
+type Employee {
+  id: Int!
+  name: String!
+  email: String!
+  role: Role!
+  active: Boolean!
+  projectAssignedID: Int
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Project {
+  id: Int!
+  managerID: Int
+  name: String!
+  status: Status!
+  description: String
+  startDate: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Team {
+  id: Int!
+  teamLeaderID: Int
+  name: String!
+  description: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Ticket {
+  id: Int!
+  projectID: Int!
+  assignedToID: Int
+  status: Status!
+  title: String!
+  description: String
+  priority: Priority!
+  createdAt: DateTime!
+  completedAt: DateTime
+}
+
+type Task {
+  id: Int!
+  title: String!
+  description: String
+  assignedToID: Int
+  projectID: Int
+  dueDate: Date
+  status: Status!
+  priority: Priority!
+  createdAt: DateTime!
+  completedAt: DateTime
+}
+
+type Notification {
+  id: Int!
+  message: String!
+  employeeID: Int!
+  type: NotificationType!
+  createdAt: DateTime!
+  read: Boolean!
+}
+
+type TeamEngineer {
+  teamID: Int!
+  engineerID: Int!
+  createdAt: DateTime!
+}
+
+type ProjectTeam {
+  projectID: Int!
+  teamID: Int!
+  createdAt: DateTime!
+}
+
+type ProjectEmployee {
+  projectID: Int!
+  employeeID: Int!
+  role: String!
+  createdAt: DateTime!
+}
+
+# Paginated result types
+type EmployeeConnection {
+  edges: [Employee!]!
+  pageInfo: PaginationInfo!
+}
+
+type ProjectConnection {
+  edges: [Project!]!
+  pageInfo: PaginationInfo!
+}
+
+type TaskConnection {
+  edges: [Task!]!
+  pageInfo: PaginationInfo!
+}
+
+type TicketConnection {
+  edges: [Ticket!]!
+  pageInfo: PaginationInfo!
+}
+
+type TeamConnection {
+  edges: [Team!]!
+  pageInfo: PaginationInfo!
+}
+
+# ----------- Inputs -----------
+
+input LoginDetailsInput {
+  username: String!
+  password: String!
+}
+
+input EmployeeInput {
+  name: String!
+  role: Role!
+  email: String!
+  password: String!
+  projectID: Int
+}
+
+input ProjectInput {
+  name: String!
+  managerID: Int
+  teamIDs: [Int!]
+  status: Status
+  description: String
+}
+
+input TeamInput {
+  name: String!
+  teamLeaderID: Int
+  description: String
+  engineerIDs: [Int!]
+}
+
+input TicketInput {
+  title: String!
+  description: String
+  projectID: Int!
+  assignedToID: Int
+  status: Status!
+  priority: Priority
+}
+
+input TaskInput {
+  title: String!
+  description: String
+  assignedToID: Int
+  projectID: Int
+  dueDate: Date
+  status: Status!
+  priority: Priority
+}
+
+input TeamEngineerInput {
+  teamID: Int!
+  engineerID: Int!
+}
+
+input ProjectTeamInput {
+  projectID: Int!
+  teamID: Int!
+}
+
+input ProjectEmployeeInput {
+  projectID: Int!
+  employeeID: Int!
+  role: String!
+}
