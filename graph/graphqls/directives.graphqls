@@ -1,0 +1,9 @@
+# ----------- Directives -----------
+
+directive @auth(role: Role!) on FIELD_DEFINITION
+
+# Cache directive for caching responses
+directive @cache(ttl: Int!) on FIELD_DEFINITION
+
+# Rate limiting directive
+directive @rateLimit(limit: Int!, window: String!) on FIELD_DEFINITION

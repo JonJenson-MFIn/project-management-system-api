@@ -1,0 +1,70 @@
+# ----------- Filter Types -----------
+
+# Base filter inputs for queries
+input EmployeeFilter {
+  name: String
+  email: String
+  role: Role
+  active: Boolean
+  projectAssignedID: Int
+  createdAtAfter: DateTime
+  createdAtBefore: DateTime
+}
+
+input ProjectFilter {
+  name: String
+  status: Status
+  managerID: Int
+  startDateAfter: DateTime
+  startDateBefore: DateTime
+  createdAtAfter: DateTime
+  createdAtBefore: DateTime
+}
+
+input TaskFilter {
+  title: String
+  status: Status
+  priority: Priority
+  assignedToID: Int
+  projectID: Int
+  dueDateAfter: Date
+  dueDateBefore: Date
+  createdAtAfter: DateTime
+  createdAtBefore: DateTime
+}
+
+input TicketFilter {
+  title: String
+  status: Status
+  priority: Priority
+  projectID: Int
+  assignedToID: Int
+  createdAtAfter: DateTime
+  createdAtBefore: DateTime
+}
+
+input TeamFilter {
+  name: String
+  teamLeaderID: Int
+  createdAtAfter: DateTime
+  createdAtBefore: DateTime
+}
+
+input NotificationFilter {
+  type: NotificationType
+  read: Boolean
+  createdAtAfter: DateTime
+  createdAtBefore: DateTime
+}
+
+# Sorting inputs
+input SortInput {
+  field: String!
+  direction: SortDirection!
+}
+
+enum SortDirection {
+  ASC
+  DESC
+}
+

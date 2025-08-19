@@ -1,36 +1,30 @@
 # ----------- Mutations -----------
 
 type Mutation {
-  # Employee operations
   addEmployee(input: EmployeeInput!): Employee! @auth(role: ADMIN)
   updateEmployee(id: Int!, input: EmployeeInput!): Employee!
   deleteEmployee(id: Int!): Boolean!  @auth(role: ADMIN)
 
-  # Project operations
   addProject(input: ProjectInput!): Project!
   updateProject(id: Int!, input: ProjectInput!): Project!
   deleteProject(id: Int!): Boolean!
 
-  # Team operations
   addTeam(input: TeamInput!): Team!
   updateTeam(id: Int!, input: TeamInput!): Team!
   deleteTeam(id: Int!): Boolean!
 
-  # Ticket operations
   addTicket(input: TicketInput!): Ticket!
   updateTicket(id: Int!, input: TicketInput!): Ticket!
   deleteTicket(id: Int!): Boolean!
 
-  # Task operations
   addTask(input: TaskInput!): Task!
   updateTask(id: Int!, input: TaskInput!): Task!
   deleteTask(id: Int!): Boolean!
 
-  # Notification operations
   addNotification(message: String!, employeeID: Int!, type: NotificationType): Notification!
   markNotificationRead(id: Int!): Boolean!
 
-  # Junction table operations
+
   addTeamEngineer(input: TeamEngineerInput!): TeamEngineer!
   removeTeamEngineer(input: TeamEngineerInput!): Boolean!
   

@@ -1,37 +1,45 @@
 # ----------- Queries -----------
 
 type Query {
-  # Employee queries
-  employees: [Employee!]!
+
+  employees(filter: EmployeeFilter): [Employee!]!
   employee(id: Int!): Employee
   signIn(email: String!, password: String!): Boolean!
 
-  # Project queries
-  projects: [Project!]!
+
+  projects(filter: ProjectFilter): [Project!]!
   project(id: Int!): Project
 
-  # Task queries
-  tasks: [Task!]!
+
+  tasks(filter: TaskFilter): [Task!]!
   task(id: Int!): Task
 
-  # Ticket queries
-  tickets: [Ticket!]!
+
+  tickets(filter: TicketFilter): [Ticket!]!
   ticket(id: Int!): Ticket
 
-  # Team queries
-  teams: [Team!]!
+
+  teams(filter: TeamFilter): [Team!]!
   team(id: Int!): Team
 
-  # Notification queries
-  notifications(employeeID: Int!): [Notification!]!
+  
+  notifications(employeeID: Int!, filter: NotificationFilter): [Notification!]!
 
-  # Junction table queries
   teamEngineers(teamID: Int!): [TeamEngineer!]!
   projectTeams(projectID: Int!): [ProjectTeam!]!
   projectEmployees(projectID: Int!): [ProjectEmployee!]!
   
-  # Relationship queries
   employeesByProject(projectID: Int!): [Employee!]!
   teamsByProject(projectID: Int!): [Team!]!
   engineersByTeam(teamID: Int!): [Employee!]!
+
+  tasksByStatus(status: Status!, filter: TaskFilter): [Task!]!
+  ticketsByStatus(status: Status!, filter: TicketFilter): [Ticket!]!
+  projectsByStatus(status: Status!, filter: ProjectFilter): [Project!]!
+  
+  tasksByPriority(priority: Priority!, filter: TaskFilter): [Task!]!
+  ticketsByPriority(priority: Priority!, filter: TicketFilter): [Ticket!]!
+  
+  tasksDueBetween(startDate: Date!, endDate: Date!, filter: TaskFilter): [Task!]!
+  projectsStartedBetween(startDate: DateTime!, endDate: DateTime!, filter: ProjectFilter): [Project!]!
 }

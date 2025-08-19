@@ -32,8 +32,6 @@ enum NotificationType {
   SUCCESS
 }
 
-# ---------- Directive -----------
-directive @auth(role: Role!) on FIELD_DEFINITION
 
 # ----------- Types -----------
 
@@ -121,33 +119,10 @@ type ProjectEmployee {
   createdAt: DateTime!
 }
 
-# Paginated result types
-type EmployeeConnection {
-  edges: [Employee!]!
-  pageInfo: PaginationInfo!
-}
 
-type ProjectConnection {
-  edges: [Project!]!
-  pageInfo: PaginationInfo!
-}
-
-type TaskConnection {
-  edges: [Task!]!
-  pageInfo: PaginationInfo!
-}
-
-type TicketConnection {
-  edges: [Ticket!]!
-  pageInfo: PaginationInfo!
-}
-
-type TeamConnection {
-  edges: [Team!]!
-  pageInfo: PaginationInfo!
-}
 
 # ----------- Inputs -----------
+
 
 input LoginDetailsInput {
   username: String!
