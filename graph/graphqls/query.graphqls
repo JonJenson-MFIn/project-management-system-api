@@ -33,13 +33,6 @@ type Query {
   teamsByProject(projectID: Int!): [Team!]!
   engineersByTeam(teamID: Int!): [Employee!]!
 
-  tasksByStatus(status: Status!, filter: TaskFilter): [Task!]!
-  ticketsByStatus(status: Status!, filter: TicketFilter): [Ticket!]!
-  projectsByStatus(status: Status!, filter: ProjectFilter): [Project!]!
-  
-  tasksByPriority(priority: Priority!, filter: TaskFilter): [Task!]!
-  ticketsByPriority(priority: Priority!, filter: TicketFilter): [Ticket!]!
-  
-  tasksDueBetween(startDate: Date!, endDate: Date!, filter: TaskFilter): [Task!]!
-  projectsStartedBetween(startDate: DateTime!, endDate: DateTime!, filter: ProjectFilter): [Project!]!
+
+
 }

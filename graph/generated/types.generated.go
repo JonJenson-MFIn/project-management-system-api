@@ -21,17 +21,6 @@ import (
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) dir_auth_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
-	var err error
-	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "role", ec.unmarshalNRole2githubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐRole)
-	if err != nil {
-		return nil, err
-	}
-	args["role"] = arg0
-	return args, nil
-}
-
 // endregion ***************************** args.gotpl *****************************
 
 // region    ************************** directives.gotpl **************************
@@ -4207,6 +4196,22 @@ func (ec *executionContext) marshalOProject2ᚖgithubᚗcomᚋJonJensonᚑMFIn�
 		return graphql.Null
 	}
 	return ec._Project(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalORole2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐRole(ctx context.Context, v any) (*model.Role, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.Role)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalORole2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐRole(ctx context.Context, sel ast.SelectionSet, v *model.Role) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) unmarshalOStatus2ᚖgithubᚗcomᚋJonJensonᚑMFInᚋprojectᚑmanagementᚑsystemᚑapiᚋgraphᚋmodelᚐStatus(ctx context.Context, v any) (*model.Status, error) {

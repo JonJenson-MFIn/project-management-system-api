@@ -21,6 +21,16 @@ type Employee struct {
 	UpdatedAt         time.Time `json:"updatedAt"`
 }
 
+type EmployeeFilter struct {
+	Name              *string    `json:"name,omitempty"`
+	Email             *string    `json:"email,omitempty"`
+	Role              *Role      `json:"role,omitempty"`
+	Active            *bool      `json:"active,omitempty"`
+	ProjectAssignedID *int       `json:"projectAssignedID,omitempty"`
+	CreatedAtAfter    *time.Time `json:"createdAtAfter,omitempty"`
+	CreatedAtBefore   *time.Time `json:"createdAtBefore,omitempty"`
+}
+
 type EmployeeInput struct {
 	Name      string `json:"name"`
 	Role      Role   `json:"role"`
@@ -44,6 +54,13 @@ type Notification struct {
 	Type       NotificationType `json:"type"`
 	CreatedAt  time.Time        `json:"createdAt"`
 	Read       bool             `json:"read"`
+}
+
+type NotificationFilter struct {
+	Type            *NotificationType `json:"type,omitempty"`
+	Read            *bool             `json:"read,omitempty"`
+	CreatedAtAfter  *time.Time        `json:"createdAtAfter,omitempty"`
+	CreatedAtBefore *time.Time        `json:"createdAtBefore,omitempty"`
 }
 
 type Project struct {
@@ -70,6 +87,16 @@ type ProjectEmployeeInput struct {
 	Role       string `json:"role"`
 }
 
+type ProjectFilter struct {
+	Name            *string    `json:"name,omitempty"`
+	Status          *Status    `json:"status,omitempty"`
+	ManagerID       *int       `json:"managerID,omitempty"`
+	StartDateAfter  *time.Time `json:"startDateAfter,omitempty"`
+	StartDateBefore *time.Time `json:"startDateBefore,omitempty"`
+	CreatedAtAfter  *time.Time `json:"createdAtAfter,omitempty"`
+	CreatedAtBefore *time.Time `json:"createdAtBefore,omitempty"`
+}
+
 type ProjectInput struct {
 	Name        string  `json:"name"`
 	ManagerID   *int    `json:"managerID,omitempty"`
@@ -92,6 +119,11 @@ type ProjectTeamInput struct {
 type Query struct {
 }
 
+type SortInput struct {
+	Field     string        `json:"field"`
+	Direction SortDirection `json:"direction"`
+}
+
 type Task struct {
 	ID           int        `json:"id"`
 	Title        string     `json:"title"`
@@ -103,6 +135,18 @@ type Task struct {
 	Priority     Priority   `json:"priority"`
 	CreatedAt    time.Time  `json:"createdAt"`
 	CompletedAt  *time.Time `json:"completedAt,omitempty"`
+}
+
+type TaskFilter struct {
+	Title           *string    `json:"title,omitempty"`
+	Status          *Status    `json:"status,omitempty"`
+	Priority        *Priority  `json:"priority,omitempty"`
+	AssignedToID    *int       `json:"assignedToID,omitempty"`
+	ProjectID       *int       `json:"projectID,omitempty"`
+	DueDateAfter    *string    `json:"dueDateAfter,omitempty"`
+	DueDateBefore   *string    `json:"dueDateBefore,omitempty"`
+	CreatedAtAfter  *time.Time `json:"createdAtAfter,omitempty"`
+	CreatedAtBefore *time.Time `json:"createdAtBefore,omitempty"`
 }
 
 type TaskInput struct {
@@ -135,6 +179,13 @@ type TeamEngineerInput struct {
 	EngineerID int `json:"engineerID"`
 }
 
+type TeamFilter struct {
+	Name            *string    `json:"name,omitempty"`
+	TeamLeaderID    *int       `json:"teamLeaderID,omitempty"`
+	CreatedAtAfter  *time.Time `json:"createdAtAfter,omitempty"`
+	CreatedAtBefore *time.Time `json:"createdAtBefore,omitempty"`
+}
+
 type TeamInput struct {
 	Name         string  `json:"name"`
 	TeamLeaderID *int    `json:"teamLeaderID,omitempty"`
@@ -152,6 +203,16 @@ type Ticket struct {
 	Priority     Priority   `json:"priority"`
 	CreatedAt    time.Time  `json:"createdAt"`
 	CompletedAt  *time.Time `json:"completedAt,omitempty"`
+}
+
+type TicketFilter struct {
+	Title           *string    `json:"title,omitempty"`
+	Status          *Status    `json:"status,omitempty"`
+	Priority        *Priority  `json:"priority,omitempty"`
+	ProjectID       *int       `json:"projectID,omitempty"`
+	AssignedToID    *int       `json:"assignedToID,omitempty"`
+	CreatedAtAfter  *time.Time `json:"createdAtAfter,omitempty"`
+	CreatedAtBefore *time.Time `json:"createdAtBefore,omitempty"`
 }
 
 type TicketInput struct {
@@ -335,6 +396,61 @@ func (e *Role) UnmarshalJSON(b []byte) error {
 }
 
 func (e Role) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	e.MarshalGQL(&buf)
+	return buf.Bytes(), nil
+}
+
+type SortDirection string
+
+const (
+	SortDirectionAsc  SortDirection = "ASC"
+	SortDirectionDesc SortDirection = "DESC"
+)
+
+var AllSortDirection = []SortDirection{
+	SortDirectionAsc,
+	SortDirectionDesc,
+}
+
+func (e SortDirection) IsValid() bool {
+	switch e {
+	case SortDirectionAsc, SortDirectionDesc:
+		return true
+	}
+	return false
+}
+
+func (e SortDirection) String() string {
+	return string(e)
+}
+
+func (e *SortDirection) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SortDirection(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SortDirection", str)
+	}
+	return nil
+}
+
+func (e SortDirection) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+func (e *SortDirection) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+	if err != nil {
+		return err
+	}
+	return e.UnmarshalGQL(s)
+}
+
+func (e SortDirection) MarshalJSON() ([]byte, error) {
 	var buf bytes.Buffer
 	e.MarshalGQL(&buf)
 	return buf.Bytes(), nil

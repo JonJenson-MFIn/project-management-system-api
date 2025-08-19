@@ -38,7 +38,9 @@ type ResolverRoot interface {
 }
 
 type DirectiveRoot struct {
-	Auth func(ctx context.Context, obj any, next graphql.Resolver, role model.Role) (res any, err error)
+	Auth      func(ctx context.Context, obj any, next graphql.Resolver, role model.Role) (res any, err error)
+	Cache     func(ctx context.Context, obj any, next graphql.Resolver, ttl int) (res any, err error)
+	RateLimit func(ctx context.Context, obj any, next graphql.Resolver, limit int, window string) (res any, err error)
 }
 
 type ComplexityRoot struct {
@@ -115,23 +117,23 @@ type ComplexityRoot struct {
 
 	Query struct {
 		Employee           func(childComplexity int, id int) int
-		Employees          func(childComplexity int) int
+		Employees          func(childComplexity int, filter *model.EmployeeFilter) int
 		EmployeesByProject func(childComplexity int, projectID int) int
 		EngineersByTeam    func(childComplexity int, teamID int) int
-		Notifications      func(childComplexity int, employeeID int) int
+		Notifications      func(childComplexity int, employeeID int, filter *model.NotificationFilter) int
 		Project            func(childComplexity int, id int) int
 		ProjectEmployees   func(childComplexity int, projectID int) int
 		ProjectTeams       func(childComplexity int, projectID int) int
-		Projects           func(childComplexity int) int
+		Projects           func(childComplexity int, filter *model.ProjectFilter) int
 		SignIn             func(childComplexity int, email string, password string) int
 		Task               func(childComplexity int, id int) int
-		Tasks              func(childComplexity int) int
+		Tasks              func(childComplexity int, filter *model.TaskFilter) int
 		Team               func(childComplexity int, id int) int
 		TeamEngineers      func(childComplexity int, teamID int) int
-		Teams              func(childComplexity int) int
+		Teams              func(childComplexity int, filter *model.TeamFilter) int
 		TeamsByProject     func(childComplexity int, projectID int) int
 		Ticket             func(childComplexity int, id int) int
-		Tickets            func(childComplexity int) int
+		Tickets            func(childComplexity int, filter *model.TicketFilter) int
 	}
 
 	Task struct {
@@ -702,7 +704,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			break
 		}
 
-		return e.complexity.Query.Employees(childComplexity), true
+		args, err := ec.field_Query_employees_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Employees(childComplexity, args["filter"].(*model.EmployeeFilter)), true
 
 	case "Query.employeesByProject":
 		if e.complexity.Query.EmployeesByProject == nil {
@@ -738,7 +745,7 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			return 0, false
 		}
 
-		return e.complexity.Query.Notifications(childComplexity, args["employeeID"].(int)), true
+		return e.complexity.Query.Notifications(childComplexity, args["employeeID"].(int), args["filter"].(*model.NotificationFilter)), true
 
 	case "Query.project":
 		if e.complexity.Query.Project == nil {
@@ -781,7 +788,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			break
 		}
 
-		return e.complexity.Query.Projects(childComplexity), true
+		args, err := ec.field_Query_projects_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Projects(childComplexity, args["filter"].(*model.ProjectFilter)), true
 
 	case "Query.signIn":
 		if e.complexity.Query.SignIn == nil {
@@ -812,7 +824,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			break
 		}
 
-		return e.complexity.Query.Tasks(childComplexity), true
+		args, err := ec.field_Query_tasks_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Tasks(childComplexity, args["filter"].(*model.TaskFilter)), true
 
 	case "Query.team":
 		if e.complexity.Query.Team == nil {
@@ -843,7 +860,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			break
 		}
 
-		return e.complexity.Query.Teams(childComplexity), true
+		args, err := ec.field_Query_teams_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Teams(childComplexity, args["filter"].(*model.TeamFilter)), true
 
 	case "Query.teamsByProject":
 		if e.complexity.Query.TeamsByProject == nil {
@@ -874,7 +896,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 			break
 		}
 
-		return e.complexity.Query.Tickets(childComplexity), true
+		args, err := ec.field_Query_tickets_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Tickets(childComplexity, args["filter"].(*model.TicketFilter)), true
 
 	case "Task.assignedToID":
 		if e.complexity.Task.AssignedToID == nil {
@@ -1080,14 +1107,21 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	opCtx := graphql.GetOperationContext(ctx)
 	ec := executionContext{opCtx, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
+		ec.unmarshalInputEmployeeFilter,
 		ec.unmarshalInputEmployeeInput,
 		ec.unmarshalInputLoginDetailsInput,
+		ec.unmarshalInputNotificationFilter,
 		ec.unmarshalInputProjectEmployeeInput,
+		ec.unmarshalInputProjectFilter,
 		ec.unmarshalInputProjectInput,
 		ec.unmarshalInputProjectTeamInput,
+		ec.unmarshalInputSortInput,
+		ec.unmarshalInputTaskFilter,
 		ec.unmarshalInputTaskInput,
 		ec.unmarshalInputTeamEngineerInput,
+		ec.unmarshalInputTeamFilter,
 		ec.unmarshalInputTeamInput,
+		ec.unmarshalInputTicketFilter,
 		ec.unmarshalInputTicketInput,
 	)
 	first := true
@@ -1186,39 +1220,114 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
+	{Name: "../graphqls/directives.graphqls", Input: `# ----------- Directives -----------
+
+directive @auth(role: Role!) on FIELD_DEFINITION
+
+# Cache directive for caching responses
+directive @cache(ttl: Int!) on FIELD_DEFINITION
+
+# Rate limiting directive
+directive @rateLimit(limit: Int!, window: String!) on FIELD_DEFINITION
+`, BuiltIn: false},
+	{Name: "../graphqls/filters.graphqls", Input: `# ----------- Filter Types -----------
+
+# Base filter inputs for queries
+input EmployeeFilter {
+  name: String
+  email: String
+  role: Role
+  active: Boolean
+  projectAssignedID: Int
+  createdAtAfter: DateTime
+  createdAtBefore: DateTime
+}
+
+input ProjectFilter {
+  name: String
+  status: Status
+  managerID: Int
+  startDateAfter: DateTime
+  startDateBefore: DateTime
+  createdAtAfter: DateTime
+  createdAtBefore: DateTime
+}
+
+input TaskFilter {
+  title: String
+  status: Status
+  priority: Priority
+  assignedToID: Int
+  projectID: Int
+  dueDateAfter: Date
+  dueDateBefore: Date
+  createdAtAfter: DateTime
+  createdAtBefore: DateTime
+}
+
+input TicketFilter {
+  title: String
+  status: Status
+  priority: Priority
+  projectID: Int
+  assignedToID: Int
+  createdAtAfter: DateTime
+  createdAtBefore: DateTime
+}
+
+input TeamFilter {
+  name: String
+  teamLeaderID: Int
+  createdAtAfter: DateTime
+  createdAtBefore: DateTime
+}
+
+input NotificationFilter {
+  type: NotificationType
+  read: Boolean
+  createdAtAfter: DateTime
+  createdAtBefore: DateTime
+}
+
+# Sorting inputs
+input SortInput {
+  field: String!
+  direction: SortDirection!
+}
+
+enum SortDirection {
+  ASC
+  DESC
+}
+
+`, BuiltIn: false},
 	{Name: "../graphqls/mutations.graphqls", Input: `# ----------- Mutations -----------
 
 type Mutation {
-  # Employee operations
   addEmployee(input: EmployeeInput!): Employee! @auth(role: ADMIN)
   updateEmployee(id: Int!, input: EmployeeInput!): Employee!
   deleteEmployee(id: Int!): Boolean!  @auth(role: ADMIN)
 
-  # Project operations
   addProject(input: ProjectInput!): Project!
   updateProject(id: Int!, input: ProjectInput!): Project!
   deleteProject(id: Int!): Boolean!
 
-  # Team operations
   addTeam(input: TeamInput!): Team!
   updateTeam(id: Int!, input: TeamInput!): Team!
   deleteTeam(id: Int!): Boolean!
 
-  # Ticket operations
   addTicket(input: TicketInput!): Ticket!
   updateTicket(id: Int!, input: TicketInput!): Ticket!
   deleteTicket(id: Int!): Boolean!
 
-  # Task operations
   addTask(input: TaskInput!): Task!
   updateTask(id: Int!, input: TaskInput!): Task!
   deleteTask(id: Int!): Boolean!
 
-  # Notification operations
   addNotification(message: String!, employeeID: Int!, type: NotificationType): Notification!
   markNotificationRead(id: Int!): Boolean!
 
-  # Junction table operations
+
   addTeamEngineer(input: TeamEngineerInput!): TeamEngineer!
   removeTeamEngineer(input: TeamEngineerInput!): Boolean!
   
@@ -1233,39 +1342,40 @@ type Mutation {
 	{Name: "../graphqls/query.graphqls", Input: `# ----------- Queries -----------
 
 type Query {
-  # Employee queries
-  employees: [Employee!]!
+
+  employees(filter: EmployeeFilter): [Employee!]!
   employee(id: Int!): Employee
   signIn(email: String!, password: String!): Boolean!
 
-  # Project queries
-  projects: [Project!]!
+
+  projects(filter: ProjectFilter): [Project!]!
   project(id: Int!): Project
 
-  # Task queries
-  tasks: [Task!]!
+
+  tasks(filter: TaskFilter): [Task!]!
   task(id: Int!): Task
 
-  # Ticket queries
-  tickets: [Ticket!]!
+
+  tickets(filter: TicketFilter): [Ticket!]!
   ticket(id: Int!): Ticket
 
-  # Team queries
-  teams: [Team!]!
+
+  teams(filter: TeamFilter): [Team!]!
   team(id: Int!): Team
 
-  # Notification queries
-  notifications(employeeID: Int!): [Notification!]!
+  
+  notifications(employeeID: Int!, filter: NotificationFilter): [Notification!]!
 
-  # Junction table queries
   teamEngineers(teamID: Int!): [TeamEngineer!]!
   projectTeams(projectID: Int!): [ProjectTeam!]!
   projectEmployees(projectID: Int!): [ProjectEmployee!]!
   
-  # Relationship queries
   employeesByProject(projectID: Int!): [Employee!]!
   teamsByProject(projectID: Int!): [Team!]!
   engineersByTeam(teamID: Int!): [Employee!]!
+
+
+
 }`, BuiltIn: false},
 	{Name: "../graphqls/types.graphqls", Input: `# ----------- Scalars -----------
 scalar Date
@@ -1301,8 +1411,6 @@ enum NotificationType {
   SUCCESS
 }
 
-# ---------- Directive -----------
-directive @auth(role: Role!) on FIELD_DEFINITION
 
 # ----------- Types -----------
 
@@ -1390,7 +1498,10 @@ type ProjectEmployee {
   createdAt: DateTime!
 }
 
+
+
 # ----------- Inputs -----------
+
 
 input LoginDetailsInput {
   username: String!

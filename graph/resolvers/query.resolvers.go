@@ -15,9 +15,41 @@ import (
 )
 
 // Employees is the resolver for the employees field.
-func (r *queryResolver) Employees(ctx context.Context) ([]*model.Employee, error) {
+func (r *queryResolver) Employees(ctx context.Context, filter *model.EmployeeFilter) ([]*model.Employee, error) {
+	query := db.DB.Model(&db.Employee{})
+
+	if filter != nil {
+		if filter.Name != nil && *filter.Name != "" {
+			query = query.Where("name LIKE ?", "%"+*filter.Name+"%")
+		}
+
+		if filter.Email != nil && *filter.Email != "" {
+			query = query.Where("email LIKE ?", "%"+*filter.Email+"%")
+		}
+
+		if filter.Role != nil {
+			query = query.Where("role = ?", db.RoleToDB(*filter.Role))
+		}
+
+		if filter.Active != nil {
+			query = query.Where("active = ?", *filter.Active)
+		}
+
+		if filter.ProjectAssignedID != nil {
+			query = query.Where("project_assigned_id = ?", *filter.ProjectAssignedID)
+		}
+
+		if filter.CreatedAtAfter != nil {
+			query = query.Where("created_at >= ?", *filter.CreatedAtAfter)
+		}
+
+		if filter.CreatedAtBefore != nil {
+			query = query.Where("created_at <= ?", *filter.CreatedAtBefore)
+		}
+	}
+
 	var employees []db.Employee
-	if err := db.DB.Find(&employees).Error; err != nil {
+	if err := query.Find(&employees).Error; err != nil {
 		return nil, fmt.Errorf("failed to fetch employees: %w", err)
 	}
 
@@ -75,7 +107,7 @@ func (r *queryResolver) SignIn(ctx context.Context, email string, password strin
 }
 
 // Projects is the resolver for the projects field.
-func (r *queryResolver) Projects(ctx context.Context) ([]*model.Project, error) {
+func (r *queryResolver) Projects(ctx context.Context, filter *model.ProjectFilter) ([]*model.Project, error) {
 	var projects []db.Project
 	if err := db.DB.Find(&projects).Error; err != nil {
 		return nil, fmt.Errorf("failed to fetch projects: %w", err)
@@ -117,7 +149,7 @@ func (r *queryResolver) Project(ctx context.Context, id int) (*model.Project, er
 }
 
 // Tasks is the resolver for the tasks field.
-func (r *queryResolver) Tasks(ctx context.Context) ([]*model.Task, error) {
+func (r *queryResolver) Tasks(ctx context.Context, filter *model.TaskFilter) ([]*model.Task, error) {
 	var tasks []db.Task
 	if err := db.DB.Find(&tasks).Error; err != nil {
 		return nil, fmt.Errorf("failed to fetch tasks: %w", err)
@@ -175,7 +207,7 @@ func (r *queryResolver) Task(ctx context.Context, id int) (*model.Task, error) {
 }
 
 // Tickets is the resolver for the tickets field.
-func (r *queryResolver) Tickets(ctx context.Context) ([]*model.Ticket, error) {
+func (r *queryResolver) Tickets(ctx context.Context, filter *model.TicketFilter) ([]*model.Ticket, error) {
 	var tickets []db.Ticket
 	if err := db.DB.Find(&tickets).Error; err != nil {
 		return nil, fmt.Errorf("failed to fetch tickets: %w", err)
@@ -219,7 +251,7 @@ func (r *queryResolver) Ticket(ctx context.Context, id int) (*model.Ticket, erro
 }
 
 // Teams is the resolver for the teams field.
-func (r *queryResolver) Teams(ctx context.Context) ([]*model.Team, error) {
+func (r *queryResolver) Teams(ctx context.Context, filter *model.TeamFilter) ([]*model.Team, error) {
 	var teams []db.Team
 	if err := db.DB.Find(&teams).Error; err != nil {
 		return nil, fmt.Errorf("failed to fetch teams: %w", err)
@@ -257,7 +289,7 @@ func (r *queryResolver) Team(ctx context.Context, id int) (*model.Team, error) {
 }
 
 // Notifications is the resolver for the notifications field.
-func (r *queryResolver) Notifications(ctx context.Context, employeeID int) ([]*model.Notification, error) {
+func (r *queryResolver) Notifications(ctx context.Context, employeeID int, filter *model.NotificationFilter) ([]*model.Notification, error) {
 	var notifications []db.Notification
 	if err := db.DB.Where("employee_id = ?", employeeID).Find(&notifications).Error; err != nil {
 		return nil, fmt.Errorf("failed to fetch notifications: %w", err)
