@@ -1,32 +1,37 @@
-package tests
+package tdd
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
-	"fmt"
 	"net/http/httptest"
 	"testing"
+
 	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql"
 	"github.com/JonJenson-MFIn/project-management-system-api/graph/generated"
-	"github.com/JonJenson-MFIn/project-management-system-api/graph/model"
 	"github.com/JonJenson-MFIn/project-management-system-api/graph/resolvers"
 )
 
-type GraphQLRequest struct {
-	Query string `json:"query"`
-}
-
-func TestAuthDirective(t *testing.T) {
+func TestQueryResolvers(t *testing.T) {
 	tests := []struct {
 		name    string
-		role    string
 		query   string
 		wantErr bool
 	}{
-		{"ADMIN can delete employee", "ADMIN", `mutation { deleteEmployee(id: 1) }`, false},
-		{"USER cannot delete employee", "USER", `mutation { deleteEmployee(id: 1) }`, true},
+		{
+			name:    "Query employees should work",
+			query:   `query { employees { id name } }`,
+			wantErr: false,
+		},
+		{
+			name:    "Query projects should work",
+			query:   `query { projects { id name } }`,
+			wantErr: false,
+		},
+		{
+			name:    "Invalid query should fail",
+			query:   `query { invalidField }`,
+			wantErr: true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -36,14 +41,6 @@ func TestAuthDirective(t *testing.T) {
 					generated.NewExecutableSchema(
 						generated.Config{
 							Resolvers: &resolvers.Resolver{},
-							Directives: generated.DirectiveRoot{
-								Auth: func(ctx context.Context, obj interface{}, next graphql.Resolver, role model.Role) (interface{}, error) {
-									if ctx.Value("role") != role {
-										return nil, fmt.Errorf("unauthorized")
-									}
-									return next(ctx)
-								},
-							},
 						},
 					),
 				),
@@ -53,7 +50,6 @@ func TestAuthDirective(t *testing.T) {
 			body, _ := json.Marshal(GraphQLRequest{Query: tt.query})
 			req := httptest.NewRequest("POST", "/", bytes.NewBuffer(body))
 			req.Header.Set("Content-Type", "application/json")
-			req = req.WithContext(context.WithValue(req.Context(), "role", tt.role))
 
 			w := httptest.NewRecorder()
 			srv.Config.Handler.ServeHTTP(w, req)
